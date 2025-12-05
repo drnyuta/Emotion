@@ -16,7 +16,7 @@ import {
   SYSTEM_PROMPT,
 } from "../constants";
 import { isGibberish } from "../utils/isGibberish";
-import { containsInappropriateContent } from "../utils/inappropriateContent";
+import { containsInappropriateContent } from "../utils/containsInappropriateContent";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const chatHistory: Record<string, any[]> = {};
