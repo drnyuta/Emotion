@@ -1,0 +1,43 @@
+body {
+  font-family: var(--paragraph);
+  font-weight: 400;
+  color: var(--color-primary);
+  background: var(--color-background);
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+}
+
+h1 {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  color: var(--color-dark-blue);
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+p,
+li {
+  font-size: 20px;
+  line-height: 34px;
+  font-family: var(--paragraph);
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 26px;
+  }
+
+  p,
+  li {
+    font-size: 16px;
+    line-height: 28px;
+  }
+}

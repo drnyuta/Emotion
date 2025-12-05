@@ -1,0 +1,31 @@
+:root {
+  --color-background: linear-gradient(
+    180deg,
+    #f6ecf4 0%,
+    #c8bfe3 59.15%,
+    #9e8edf 100%
+  );
+  --color-dark-blue: #281d58;
+  --color-lavender: #c9b5da;
+  --color-light: #edddec;
+  --color-sidebar: #f8f4fc;
+  --color-purple: #6b0cc4;
+  --color-dusty-purple: #6f60ab;
+  --color-auth-background: linear-gradient(
+    180deg,
+    #f6ecf4 0%,
+    #c8bfe3 54.33%,
+    #6f60ab 100%
+  );
+  --color-dark-gradient: linear-gradient(180deg, #6f60ab 0%, #2d2745 100%);
+  --color-joy: #dbadff;
+  --color-strength: #f9eea8;
+  --color-fear: #ffb3e8;
+  --color-fear-dark: #ff82da;
+  --color-sadness: #c4d7ff;
+  --color-anger: #ff8686;
+  --color-peace: #b5fac5;
+  --color-green: #58ff7f;
+  --color-red: #f00;
+  --color-disabled: #bcbcbc;
+}
