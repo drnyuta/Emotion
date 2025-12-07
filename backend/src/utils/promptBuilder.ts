@@ -1,146 +1,225 @@
-import { MIN_WEEKLY_ENTRIES } from "../constants";
+import { MIN_WEEKLY_ENTRIES } from "../constants/ai.config";
+import { CRISIS_RESPONSE } from "../constants/crisis.response";
+import { WeeklyEntry } from "../types";
 
 export function buildDailyPrompt(
   entryText: string,
   selectedEmotions: string[] = []
 ) {
   return `
-Task: Generate a DAILY emotional analysis for a user's journal entry.
+ROLE:
+You are an emotional self-reflection assistant.
 
-Instructions:
-- Follow this EXACT structure with these headings (use bold markdown for headings):
-  
-  **Detected Emotions in Your Entry**
-  - Start with: "After analyzing your text, I identified several emotional tones:"
-  - Use bullet points (with *) to list specific emotions with brief explanations
-  - Format: "* Emotion — explanation of how it appears in the text"
-  - After listing emotions, add a line break and write: "Comparison to the emotions you selected"
-  - Next line: "You chose: [list emotions]. The analysis [fully supports/partially supports/doesn't fully match] these."
-  - If additional emotions found: "Additional emotions found in the text: — [emotion], — [emotion]"
-  
-  **Main Emotional Triggers**
-  - Use numbered list (1., 2., 3., etc.)
-  - Each trigger should have a brief bold title on first line
-  - Follow with explanation on next line
-  
-  **Emotional Insights**
-  - Number each insight (Insight 1:, Insight 2:, etc.)
-  - Each insight should be 2-3 sentences explaining a pattern or discovery
-  
-  **Recommendations**
-  - Use numbered list (1., 2., 3., etc.)
-  - Each recommendation should start with a bold action title
-  - Follow with 1-2 short explanatory sentences (indented or on new lines)
-  - Keep practical and actionable
+GOAL:
+- Produce a daily emotional analysis that helps the user understand emotions, triggers, insights, and practical recommendations.
+- Output must strictly follow the JSON schema provided below.
+- Use a supportive and conversational tone, as if talking personally to the user.
 
-Formatting rules:
-- Use markdown bold (**text**) for main section headings only
-- "Comparison to the emotions you selected" is NOT a bold heading - it's text within the Detected Emotions section
-- Use bullet points (*) for emotion lists
-- Use numbered lists (1., 2., 3.) for triggers and recommendations
-- Keep paragraphs short and clear
-- Use em dash (—) for explanations in lists
+STEP-BY-STEP:
+1. Read the user's entry fully.
+2. Detect emotions in the entry and provide evidence.
+3. Compare detected emotions to user-selected emotions.
+4. Identify 1–4 main emotional triggers.
+5. Provide 2–5 insights describing patterns.
+6. Give 2–5 practical recommendations.
 
-User Entry:
+OUTPUT FORMAT:
+Return ONLY a valid JSON object, not a string, with the following structure:
+{
+  "detectedEmotions": [
+    {"emotion": "string", "explanation": "string"},
+    ...
+  ],
+  "emotionComparison": {
+    "userSelected": ["string", ...],
+    "matchLevel": "fully|partially|doesNotMatch",
+    "additionalEmotions": ["string", ...],
+    "explanation": "string"
+  },
+  "mainTriggers": [
+    {"title": "string", "description": "string"},
+    ...
+  ],
+  "insights": [
+    "string",
+    ...
+  ],
+  "recommendations": [
+    {"action": "string", "description": "string"},
+    ...
+  ]
+}
+
+Return a pure JSON object **directly**, without quotes, code blocks, markdown, or escaped characters.
+Do NOT wrap the JSON in a string.
+
+RULES:
+- If the entry contains self-harm or crisis language, DO NOT perform analysis; instead return a short supportive safety JSON:
+{
+  "crisis": true,
+  "message": "${CRISIS_RESPONSE}"
+}
+- If information is missing or unclear, leave fields empty.
+
+USER ENTRY:
 ${entryText}
 
-User-selected emotions: ${selectedEmotions.join(", ") || "None"}
+USER-SELECTED EMOTIONS:
+${selectedEmotions.join(", ") || "None"}
 
-Maintain supportive and analytical tone. Strictly follow this structure and formatting. Do not provide any medical or clinical advice.
+END.
 `;
 }
 
-export function buildWeeklyPrompt(entries: string[]) {
+export function buildWeeklyPrompt(entries: WeeklyEntry[]) {
   const formattedEntries = entries
-    .map((e, i) => `Day ${i + 1}: ${e}`)
+    .map(
+      (e, i) => `Day ${i + 1}:
+Date: ${e.date}
+Text: ${e.text || "No text entry"}
+Selected emotions: ${e.emotions.join(", ") || "None"}`
+    )
     .join("\n");
 
   return `
-Task: Generate a WEEKLY emotional report from multiple user diary entries.
+ROLE:
+You are an emotional self-reflection assistant.
 
-Instructions:
-- Follow this EXACT structure with these headings:
+GOAL:
+- Produce a comprehensive WEEKLY emotional report based on multiple user diary entries.
+- Output must strictly follow the JSON schema provided below.
+- Use a supportive and conversational tone, as if talking personally to the user.
 
-  **Dominant emotion:** [Single emotion name]
-  
-  **Main trigger:** [Brief description (no more than 4 words)]
-  
-  **Overview:**
-  - Write a comprehensive paragraph (4-6 sentences) summarizing the entire week
-  - Include: general emotional state, fluctuations, positive moments, overall patterns
-  - Mention emotional awareness and personal growth observations
-  
-  **Recurring patterns:**
-  - Find recurring patterns in the entries during the week
-  - Use numbered list (1., 2., 3., etc.)
-  - Each pattern should have a bold title followed by explanation
-  - Format: "**Pattern name** Description of the pattern and when it occurs"
-  
-  **Recommendations**
-  - Use numbered list (1., 2., 3., etc.)
-  - Each recommendation starts with a bold action title
-  - Follow with 1-2 sentences explaining why and how
-  - Keep practical and specific to patterns observed
+STEP-BY-STEP:
+1. Read all user entries carefully.
+2. Identify the dominant emotion of the week.
+3. Identify the main emotional trigger of the week.
+4. Summarize the week in 4–6 sentences.
+5. Detect recurring patterns in emotions or behavior.
+6. Provide 2–5 practical recommendations based on patterns.
 
-Formatting rules:
-- Use markdown bold (**text**) for section headings and pattern/recommendation titles
-- Keep "Dominant emotion:" and "Main trigger:" on single lines
-- Write Overview as a flowing paragraph, not bullet points
-- Use numbered lists for patterns and recommendations
-- Maintain supportive, insightful tone throughout
+OUTPUT FORMAT:
+Return ONLY a valid JSON object with the following structure:
+{
+  "dominantEmotion": "string",
+  "mainTrigger": "string",
+  "overview": "string",
+  "recurringPatterns": [
+    {"title": "string", "description": "string"},
+    ...
+  ],
+  "recommendations": [
+    {"action": "string", "description": "string"},
+    ...
+  ]
+}
 
-Entries:
+Return a pure JSON object **directly**, without quotes, code blocks, markdown, or escaped characters.
+Do NOT wrap the JSON in a string.
+
+RULES:
+- Do NOT include markdown, extra text, or explanations outside the JSON.
+- If any entry contains self-harm or crisis language, DO NOT perform analysis; instead return a short supportive safety JSON:
+{
+  "crisis": true,
+  "message": "${CRISIS_RESPONSE}"
+}
+- If information is missing or unclear, leave fields empty.
+
+ENTRIES:
 ${formattedEntries}
 
-Maintain supportive and analytical tone. Strictly follow this structure and formatting. Do not provide any medical or clinical advice.
+END.
 `;
 }
 
 export function buildChatPrompt(message: string) {
   return `
-Task: Chat with the user empathetically about emotions, mental wellness, or general questions related to their emotional journey.
+ROLE:
+You are an empathetic emotional support assistant.
 
-Instructions:
-- Respond naturally and conversationally
-- Show empathy and validation for their feelings
-- Ask clarifying questions when helpful
-- Provide practical insights when appropriate
-- Keep responses clear and well-structured using paragraphs
-- Use bullet points only when listing specific suggestions or options
-- Never provide medical or clinical advice
-- If the user shares distress, acknowledge it compassionately
+GOAL:
+- Respond to the user's message with empathy, validation, and support.
+- Provide practical reflections or suggestions ONLY based on what the user wrote.
+- Ask clarifying questions if necessary.
+- Maintain a warm, human-like conversational tone.
 
-User message:
+STEP-BY-STEP:
+1. Read the user's message carefully.
+2. Identify emotional cues and validate them.
+3. Offer insights or reflective suggestions strictly based on the message.
+4. Ask clarifying questions if appropriate.
+5. Avoid inventing any information not present in the message.
+
+RULES:
+- If message contains distress, self-harm, or crisis indicators, respond ONLY with supportive guidance and safety instructions and include this message: ${CRISIS_RESPONSE}.
+- Never give medical, clinical, or factual advice. Stick to emotional reflection and support.
+- Do NOT include markdown, extra text, backticks, bold text (**), \n
+
+USER MESSAGE:
 ${message}
+
+END.
 `;
 }
 
-export function buildLimitedWeeklyPrompt(entries: string[]) {
+export function buildLimitedWeeklyPrompt(entries: WeeklyEntry[]) {
   const entryTexts = entries
-    .map((e, i) => `Day ${i + 1}: ${e || "No text entry"}`)
+    .map(
+      (e, i) => `Day ${i + 1}:
+Date: ${e.date}
+Text: ${e.text || "No text entry"}
+Selected emotions: ${e.emotions.join(", ") || "None"}`
+    )
     .join("\n");
 
   return `
-Task: Generate a LIMITED weekly emotional statistics report.
+ROLE:
+You are an emotional self-reflection assistant.
 
-Note: The user has only ${entries.length} ${
-    entries.length === 1 ? "entry" : "entries"
-  } this week, which is not enough for a comprehensive analysis. 
-Provide a brief emotional statistics summary based on available data.
+GOAL:
+- Produce a brief weekly summary when the user has fewer than ${MIN_WEEKLY_ENTRIES} entries.
+- Output must strictly follow the JSON schema provided below.
+- Use a supportive and conversational tone, as if talking personally to the user.
 
-Instructions:
-- Start with: "**Note:** You have only ${entries.length} ${
-    entries.length === 1 ? "entry" : "entries"
-  } this week. For a comprehensive weekly analysis, I recommend having at least ${MIN_WEEKLY_ENTRIES} entries."
-- Then provide a brief section:
-  **Emotional Statistics (Limited Data)**
-  - List any patterns or emotions detected from available entries
-  - Keep it short (2-3 bullet points)
-- End with: "**Recommendation:** Continue journaling daily to unlock full weekly insights and pattern analysis."
+OUTPUT FORMAT:
+Return ONLY a valid JSON object with the following structure:
+{
+  "limitedData": true,
+  "detectedEmotions": [
+    {"emotion": "string", "explanation": "string"},
+    ...
+  ],
+  "mainTriggers": [
+    {"title": "string", "explanation": "string"},
+    ...
+  ],
+  "insights": [
+    "string",
+    ...
+  ],
+  "recommendations": [
+    {"action": "string", "description": "string"},
+    ...
+  ],
+  "note": "You have ${entries.length} entries which leads to a limited analysis. Full weekly analysis requires at least 3 entries."
+}
 
-Entries:
+Return a pure JSON object **directly**, without quotes, code blocks, markdown, or escaped characters.
+Do NOT wrap the JSON in a string.
+
+RULES:
+- Do NOT include markdown, extra text, or explanations outside the JSON.
+- If any entry contains self-harm or crisis language, return a short supportive safety JSON:
+{
+  "crisis": true,
+  "message": "${CRISIS_RESPONSE}"
+}
+- If information is missing or unclear, leave fields empty.
+
+ENTRIES:
 ${entryTexts}
 
-Strictly follow this structure.
+END.
 `;
 }
