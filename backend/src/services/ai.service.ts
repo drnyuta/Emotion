@@ -65,7 +65,7 @@ export class AIService {
         userId,
         message,
       });
-      throw new ValidationError("Your message contains unreadable characters.");
+      throw new ValidationError("Your message contains unreadable characters. Please write a meaningful message");
     }
 
     if (!chatHistory[userId]) chatHistory[userId] = [];
