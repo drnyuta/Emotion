@@ -38,26 +38,8 @@ export async function sendChatMessage(
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      let message: string;
-
-      switch (error.response.status) {
-        case 400:
-          message = "Bad request. Please check your message.";
-          break;
-        case 429:
-          message = "Rate limit exceeded. Please try again later.";
-          break;
-        case 503:
-          message = "Service unavailable. Please try again later.";
-          break;
-        case 504:
-          message = "Request timed out. Please try again.";
-          break;
-        default:
-          message = `Server error: ${error.response.status}`;
-      }
-
-      throw new Error(message);
+      const serverError = (error.response.data as ApiResponse)?.error;
+      throw new Error(serverError || "Unknown error");
     }
 
     if (error instanceof Error) {

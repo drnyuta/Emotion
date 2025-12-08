@@ -17,6 +17,7 @@ export function containsInappropriateContent(text: string): boolean {
   const selfHarmPatterns = [
     /\bself[-\s]?harm\b/,
     /\bcut myself\b/,
+    /\harm myself\b/,
     /\bcutting\b/,
     /\bhurt myself\b/,
     /\bi (?:want|need) to hurt myself\b/,
@@ -26,6 +27,7 @@ export function containsInappropriateContent(text: string): boolean {
   const ideationPatterns = [
     /\bno reason to live\b/,
     /\bi don't want to live\b/,
+    /\bi do not want to live\b/,
     /\bcan't live anymore\b/,
     /\bi'm done with life\b/,
   ];
