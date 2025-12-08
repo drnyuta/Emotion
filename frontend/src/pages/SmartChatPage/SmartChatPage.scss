@@ -40,7 +40,7 @@
     padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     overflow-y: auto;
     background-color: #f4effd;
   }
@@ -51,6 +51,16 @@
     border-radius: 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     word-break: break-word;
+    font-family: var(--paragraph);
+    font-size: 16px;
+    line-height: 1.5;
+
+    p,
+    li {
+      font-family: inherit;
+      font-size: inherit;
+      margin: 0; 
+    }
 
     &--user {
       background-color: #d8b4fe;
@@ -62,13 +72,17 @@
       align-self: flex-start;
     }
 
-    &--typing {
+    &--thinking {
       background-color: #fff;
       align-self: flex-start;
-      width: 48px;
+      padding: 8px 16px;
       text-align: center;
-      font-size: 12px;
+      font-size: 14px;
       color: #888;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
     }
   }
 

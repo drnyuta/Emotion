@@ -10,7 +10,7 @@ export function isGibberish(text: string): boolean {
 
   for (const w of words) {
     // 1. Word has too many non-letters (>40% of its length)
-    const nonLetterRatio = (w.match(/[^a-z]/gi)?.length || 0) / w.length;
+    const nonLetterRatio = (w.match(/[^a-z\p{Emoji}]/giu)?.length || 0) / w.length;
     if (nonLetterRatio > 0.4) {
       gibberishCount++;
       continue;
@@ -34,8 +34,8 @@ export function isGibberish(text: string): boolean {
       continue;
     }
 
-    // 5. Not readable word (only letters a-z, length > 2)
-    if (!/^[a-z]+$/.test(w) && w.length > 2) {
+    // 5. Not readable word (allow letters a-z and emojis, length > 2)
+    if (!/^[a-z\p{Emoji}]+$/giu.test(w) && w.length > 2) {
       gibberishCount++;
       continue;
     }
