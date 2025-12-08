@@ -73,7 +73,7 @@ export class AIService {
     if (entryText.trim().length < MIN_ENTRY_LENGTH)
       throw new ValidationError(
         `Message is too short. Write at least ${MIN_ENTRY_LENGTH} characters.`
-      )
+      );
     if (entryText.length > MAX_ENTRY_LENGTH)
       throw new ValidationError(
         `Entry text is too long. Maximum ${MAX_ENTRY_LENGTH} characters.`
@@ -95,35 +95,60 @@ export class AIService {
   }
 
   static async weeklyAnalysis(entries: WeeklyEntry[]): Promise<string> {
-    if (!entries || !Array.isArray(entries))
+    if (!entries || !Array.isArray(entries)) {
       throw new ValidationError("Entries must be an array.");
-    if (!entries.length)
+    }
+
+    if (!entries.length) {
       throw new ValidationError(
         "No entries found. Please add some journal entries first."
       );
-    if (entries.length > MAX_WEEKLY_ENTRIES)
+    }
+
+    if (entries.length > MAX_WEEKLY_ENTRIES) {
       throw new ValidationError(
         `Too many entries. Maximum is ${MAX_WEEKLY_ENTRIES} days.`
       );
+    }
 
-    const validEntries = entries.filter((e) => e?.text?.trim().length);
-    validEntries.forEach((entry, index) => {
-      if (entry.text.length > MAX_ENTRY_LENGTH)
+    entries.forEach((entry, index) => {
+      if (!entry.text || !entry.text.trim()) {
+        throw new ValidationError(
+          `Entry for day ${index + 1} cannot be empty.`
+        );
+      }
+
+      if (entry.text.trim().length < MIN_ENTRY_LENGTH) {
+        throw new ValidationError(
+          `Entry for day ${
+            index + 1
+          } is too short. Minimum ${MIN_ENTRY_LENGTH} characters.`
+        );
+      }
+
+      if (entry.text.length > MAX_ENTRY_LENGTH) {
         throw new ValidationError(
           `Entry for day ${
             index + 1
           } is too long. Maximum ${MAX_ENTRY_LENGTH} characters.`
         );
-      if (isGibberish(entry.text))
+      }
+
+      if (isGibberish(entry.text)) {
         throw new ValidationError(
           `Entry for day ${index + 1} contains unreadable text.`
         );
+      }
     });
 
-    if (validEntries.length < MIN_WEEKLY_ENTRIES)
+    const validEntries = entries.filter((e) => e.text.trim().length);
+
+    if (validEntries.length < MIN_WEEKLY_ENTRIES) {
       return this.generateLimitedWeeklyReport(validEntries);
+    }
 
     const prompt = buildWeeklyPrompt(validEntries);
+
     try {
       const rawResponse = await this.model.generateContent(prompt);
       return cleanAIJson(rawResponse.response.text());
