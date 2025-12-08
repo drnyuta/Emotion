@@ -6,7 +6,16 @@ import "./Sidebar.scss";
 
 export const Sidebar = () => (
   <aside className="sidebar">
-    <img className="sidebar__logo" src={BurgerIcon} alt="logo" />
+    <div className="sidebar__header">
+      <button className="sidebar__burger-menu">
+        <img
+          className="sidebar__burger-menu-icon"
+          src={BurgerIcon}
+          alt="burger menu"
+        />
+      </button>
+    </div>
+
     <nav className="sidebar__nav">
       <ul className="sidebar__nav-list">
         {menuItems.map((item: MenuItem) => (

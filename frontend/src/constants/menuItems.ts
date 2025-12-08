@@ -5,6 +5,7 @@ import AnalyticsIcon from "../assets/icons/analytics.svg";
 import SparkIcon from "../assets/icons/spark.svg";
 import UserIcon from "../assets/icons/user.svg";
 import LightbulbIcon from "../assets/icons/lightbulb.svg";
+import Chat from "../assets/icons/ai-chat.svg";
 
 export interface MenuItem {
   label: string;
@@ -17,6 +18,7 @@ export const menuItems: MenuItem[] = [
   { label: "Question Of The Day", icon: QuestionIcon, path: "/questions" },
   { label: "Emotion Wheel", icon: HappyFaceIcon, path: "/emotion-wheel" },
   { label: "Analytics", icon: AnalyticsIcon, path: "/analytics" },
+  { label: "Smart Chat", icon: Chat, path: "/smart-chat" },
   { label: "AI Reports", icon: SparkIcon, path: "/reports" },
   { label: "Insights", icon: LightbulbIcon, path: "/insights" },
   { label: "My Account", icon: UserIcon, path: "/account" },
