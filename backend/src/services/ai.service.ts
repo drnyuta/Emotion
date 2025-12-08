@@ -71,11 +71,10 @@ export class AIService {
     if (!chatHistory[userId]) chatHistory[userId] = [];
     chatHistory[userId].push({ role: "user", parts: [{ text: message }] });
 
-    const prompt = buildChatPrompt(chatHistory[userId], message);
-
     try {
-      const rawResponse = await this.model.generateContent(prompt);
-      const text = rawResponse.response.text();
+      const chat = this.model.startChat({ history: chatHistory[userId] });
+      const result = await chat.sendMessage(message);
+      const text = result.response.text();
 
       if (!text) throw new Error("Received empty response from AI");
 

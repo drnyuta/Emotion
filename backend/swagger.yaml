@@ -1,0 +1,339 @@
+openapi: 3.0.3
+info:
+  title: AI Emotional Support API
+  version: 1.0.0
+  description: >
+    API for interacting with an AI emotional support assistant.
+    Provides endpoints for chatting with AI and analyzing daily or weekly journal entries.
+
+servers:
+  - url: http://localhost:5000/api/ai
+    description: Local development server
+
+paths:
+  /chat:
+    post:
+      summary: Chat with AI
+      description: Sends a user message to the AI and receives an empathetic, supportive response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - message
+              properties:
+                userId:
+                  type: string
+                  description: Unique identifier for the user
+                  example: "user123"
+                message:
+                  type: string
+                  description: User's text message
+                  example: "I feel sad today."
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      result:
+                        type: string
+                        example: "I understand that you're feeling sad. Can you tell me more about why?"
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      result:
+                        type: object
+                        properties:
+                          crisis:
+                            type: boolean
+                            example: true
+                          message:
+                            type: string
+                            example: "It seems like you're in distress. Please contact support immediately."
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Message cannot be empty."
+        '429':
+          description: Rate limit exceeded
+        '503':
+          description: Service unavailable
+        '504':
+          description: Timeout
+
+  /daily-report:
+    post:
+      summary: Daily Analysis
+      description: Analyzes a single journal entry to provide emotional insights, triggers, and recommendations.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - entryText
+                - selectedEmotions
+              properties:
+                entryText:
+                  type: string
+                  description: Journal entry text
+                  example: "I felt stressed today because of work deadlines."
+                selectedEmotions:
+                  type: array
+                  items:
+                    type: string
+                  description: List of user-selected emotions
+                  example: ["stress", "anxiety"]
+      responses:
+        '200':
+          description: Daily analysis result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      result:
+                        type: object
+                        properties:
+                          detectedEmotions:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                emotion:
+                                  type: string
+                                explanation:
+                                  type: string
+                          emotionComparison:
+                            type: object
+                            properties:
+                              userSelected:
+                                type: array
+                                items:
+                                  type: string
+                              matchLevel:
+                                type: string
+                                enum: [fully, partially, doesNotMatch]
+                              additionalEmotions:
+                                type: array
+                                items:
+                                  type: string
+                              explanation:
+                                type: string
+                          mainTriggers:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                title:
+                                  type: string
+                                description:
+                                  type: string
+                          insights:
+                            type: array
+                            items:
+                              type: string
+                          recommendations:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                action:
+                                  type: string
+                                description:
+                                  type: string
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      result:
+                        type: object
+                        properties:
+                          crisis:
+                            type: boolean
+                            example: true
+                          message:
+                            type: string
+                            example: "It seems like you're in distress. Please contact support immediately."
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Entry cannot be empty."
+        '429':
+          description: Rate limit exceeded
+        '503':
+          description: Service unavailable
+        '504':
+          description: Timeout
+
+  /weekly-analysis:
+    post:
+      summary: Weekly Analysis
+      description: Generates a full weekly report based on multiple journal entries.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - entries
+              properties:
+                entries:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        format: date
+                        example: "2025-12-08"
+                      text:
+                        type: string
+                        example: "I felt happy after meeting friends."
+                      emotions:
+                        type: array
+                        items:
+                          type: string
+                        example: ["happy", "relaxed"]
+      responses:
+        '200':
+          description: Weekly analysis result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: Full weekly report
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      result:
+                        type: object
+                        properties:
+                          dominantEmotion:
+                            type: string
+                          mainTrigger:
+                            type: string
+                          overview:
+                            type: string
+                          recurringPatterns:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                title:
+                                  type: string
+                                description:
+                                  type: string
+                          recommendations:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                action:
+                                  type: string
+                                description:
+                                  type: string
+                  - type: object
+                    description: Limited weekly report (entries < MIN_WEEKLY_ENTRIES)
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      result:
+                        type: object
+                        properties:
+                          limitedData:
+                            type: boolean
+                            example: true
+                          detectedEmotions:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                emotion:
+                                  type: string
+                                explanation:
+                                  type: string
+                          mainTriggers:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                title:
+                                  type: string
+                                explanation:
+                                  type: string
+                          insights:
+                            type: array
+                            items:
+                              type: string
+                          recommendations:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                action:
+                                  type: string
+                                description:
+                                  type: string
+                          note:
+                            type: string
+                            example: "You have 2 entries which leads to a limited analysis. Full weekly analysis requires at least 3 entries."
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Entries must be an array."
+        '429':
+          description: Rate limit exceeded
+        '503':
+          description: Service unavailable
+        '504':
+          description: Timeout

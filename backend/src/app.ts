@@ -1,5 +1,8 @@
 import express from "express";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+import path from "path";
 import aiRoutes from "./routes/ai.routes";
 import { errorLogger } from "./middleware/errorLogger";
 import { requestLogger } from "./middleware/requestLogger";
@@ -12,6 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 app.use("/ai", aiRoutes);
+
+const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorLogger);
 
