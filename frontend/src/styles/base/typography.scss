@@ -1,0 +1,47 @@
+body {
+  font-family: var(--paragraph);
+  font-weight: 400;
+  color: var(--color-primary);
+  background: var(--color-background);
+  background-repeat: no-repeat;
+  margin: 0;
+}
+
+h1 {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  color: var(--color-dark-blue);
+  margin: 0;
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0;
+}
+
+h3 {
+  font-size: 24px;
+  margin: 0;
+}
+
+p,
+li,
+a {
+  margin: 0;
+  font-size: 20px;
+  line-height: 34px;
+  font-family: var(--paragraph);
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 26px;
+  }
+
+  p,
+  li {
+    font-size: 16px;
+    line-height: 28px;
+  }
+}

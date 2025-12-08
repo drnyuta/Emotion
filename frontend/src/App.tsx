@@ -1,14 +1,25 @@
-import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Layout } from "./components/Layout/Layout";
+import { DiaryPage } from "./pages/DiaryPage/DiaryPage";
+import './styles/index.scss';
+import SmartChatPage from "./pages/SmartChatPage/SmartChatPage";
 
-function App() {
+export const App: React.FC = () => {
   return (
-    <>
-      <h1>Heading 1</h1>
-      <h2>Heading 2</h2>
-      <h3>Heading 3</h3>
-      <p>This is test</p>
-    </>
+    <Router>
+      <Routes>
+        <Route
+          path="/*"
+          element={
+            <Layout>
+              <Routes>
+                <Route path="diary" element={<DiaryPage />} />
+                <Route path="smart-chat" element={<SmartChatPage />} />
+              </Routes>
+            </Layout>
+          }
+        />
+      </Routes>
+    </Router>
   );
-}
-
-export default App;
+};
