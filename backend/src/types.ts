@@ -3,3 +3,8 @@ export type WeeklyEntry = {
   emotions: string[];
   date: string;
 };
+
+export interface ChatMessage {
+  role: "user" | "model";
+  parts: { text: string }[];
+}
