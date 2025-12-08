@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
+import { RingLoader } from "react-spinners";
 import { sendChatMessage } from "../../api/ai/chatApi";
 import "./SmartChatPage.scss";
+import ReactMarkdown from "react-markdown";
 
 export default function SmartChatPage() {
   const [messages, setMessages] = useState<
@@ -8,7 +10,7 @@ export default function SmartChatPage() {
   >([]);
   const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const [isTyping, setIsTyping] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const userId = "user-123";
 
   type Role = "user" | "assistant";
@@ -20,7 +22,7 @@ export default function SmartChatPage() {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+  }, [messages, isThinking]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -31,7 +33,7 @@ export default function SmartChatPage() {
     };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    setIsTyping(true);
+    setIsThinking(true);
 
     try {
       const aiResponse = await sendChatMessage(userId, userMessage.content);
@@ -43,6 +45,8 @@ export default function SmartChatPage() {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown error";
       setMessages((prev) => [...prev, { role: "assistant", content: message }]);
+    } finally {
+      setIsThinking(false);
     }
   };
 
@@ -71,13 +75,14 @@ export default function SmartChatPage() {
                 key={index}
                 className={`chat__message chat__message--${msg.role}`}
               >
-                {msg.content}
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
               </div>
             ))}
 
-            {isTyping && (
-              <div className="chat__message chat__message--typing">
-                Thinking...
+            {isThinking && (
+              <div className="chat__message chat__message--thinking">
+                <p>Thinking...</p>
+                <RingLoader color="#8830daff" size={20} />
               </div>
             )}
 
@@ -95,7 +100,7 @@ export default function SmartChatPage() {
             <button
               className="chat__input-area__send-button"
               onClick={sendMessage}
-              disabled={!input.trim() || isTyping}
+              disabled={!input.trim() || isThinking}
             >
               Send
             </button>
