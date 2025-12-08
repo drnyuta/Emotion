@@ -3,6 +3,7 @@ import { RingLoader } from "react-spinners";
 import { sendChatMessage } from "../../api/ai/chatApi";
 import "./SmartChatPage.scss";
 import ReactMarkdown from "react-markdown";
+import TextareaAutosize from "react-textarea-autosize";
 
 export default function SmartChatPage() {
   const [messages, setMessages] = useState<
@@ -90,12 +91,13 @@ export default function SmartChatPage() {
           </div>
 
           <div className="chat__input-area">
-            <textarea
+            <TextareaAutosize
               className="chat__input-area__input"
-              placeholder="Ask a question..."
+              minRows={1}
+              maxRows={6}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
+              placeholder="Type your message..."
             />
             <button
               className="chat__input-area__send-button"

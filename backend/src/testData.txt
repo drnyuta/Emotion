@@ -1,0 +1,161 @@
+// ===============================
+// CHAT — VALID EXAMPLES
+// ===============================
+
+{
+  "userId": "test-user",
+  "message": "Hello! Can you give me some advice on staying motivated during work?"
+}
+
+{
+  "userId": "test-user",
+  "message": "I feel anxious about meeting new people. How can I manage this?"
+}
+
+// ===============================
+// CHAT — ERROR / EDGE CASES
+// ===============================
+
+{
+  "userId": "test-user",
+  "message": ""
+}
+
+{
+  "userId": "test-user",
+  "message": "a"
+}
+
+{
+  "userId": "test-user",
+  "message": "!!!!"
+}
+
+{
+  "userId": "test-user",
+  "message": "hurt myself"
+}
+
+// ===============================
+// DAILY REPORT — VALID EXAMPLES
+// ===============================
+
+{
+  "entryText": "Today I felt a mixture of excitement and nervousness. I started a new hobby, painting, and it brought me joy and a sense of accomplishment. In the evening, I went for a long walk, which helped me calm down and reflect on the day.",
+  "selectedEmotions": ["excited", "calm", "joyful"]
+}
+
+{
+  "entryText": "Had a busy but productive day.",
+  "selectedEmotions": ["productive"]
+}
+
+// ===============================
+// DAILY REPORT — ERROR / EDGE CASES
+// ===============================
+
+{
+  "entryText": "",
+  "selectedEmotions": ["happy"]
+}
+
+{
+  "entryText": "I felt happy today.",
+  "selectedEmotions": []
+}
+
+{
+  "entryText": "kkkkkkk",
+  "selectedEmotions": ["happy"]
+}
+
+// ===============================
+// WEEKLY REPORT — VALID EXAMPLE (2 DAYS → LIMITED REPORT)
+// ===============================
+
+{
+  "entries": [
+    {
+      "date": "2025-12-01",
+      "text": "Today was stressful but I managed to finish my tasks.",
+      "emotions": ["stressed", "relieved"]
+    },
+    {
+      "date": "2025-12-02",
+      "text": "I felt tired and unmotivated in the morning but felt better after walking.",
+      "emotions": ["tired", "calm"]
+    }
+  ]
+}
+
+// ===============================
+// WEEKLY REPORT — VALID EXAMPLE (5 DAYS → FULL REPORT)
+// ===============================
+
+{
+  "entries": [
+    {
+      "date": "2025-12-01",
+      "text": "Went for a long walk and felt energized.",
+      "emotions": ["energized", "calm"]
+    },
+    {
+      "date": "2025-12-02",
+      "text": "Worked on my project and felt productive.",
+      "emotions": ["productive"]
+    },
+    {
+      "date": "2025-12-03",
+      "text": "Had a fun call with friends.",
+      "emotions": ["happy", "connected"]
+    },
+    {
+      "date": "2025-12-04",
+      "text": "Felt a bit anxious during a meeting.",
+      "emotions": ["anxious"]
+    },
+    {
+      "date": "2025-12-05",
+      "text": "Relaxed by reading a book in the evening.",
+      "emotions": ["relaxed"]
+    }
+  ]
+}
+
+// ===============================
+// WEEKLY REPORT — ERROR: EMPTY TEXT IN ENTRY
+// ===============================
+
+{
+  "entries": [
+    {
+      "date": "2025-12-01",
+      "text": "",
+      "emotions": ["neutral"]
+    },
+    {
+      "date": "2025-12-02",
+      "text": "Worked from home.",
+      "emotions": ["productive"]
+    }
+  ]
+}
+
+// ===============================
+// WEEKLY REPORT — ERROR: GIBBERISH ENTRY
+// ===============================
+
+{
+  "entries": [
+    {
+      "date": "2025-12-01",
+      "text": "klmjrgrjk",
+      "emotions": ["happy"]
+    },
+    {
+      "date": "2025-12-02",
+      "text": "Normal day.",
+      "emotions": ["neutral"]
+    }
+  ]
+}
