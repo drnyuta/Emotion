@@ -1,0 +1,42 @@
+# docker-compose.dev.yml
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: emotion-backend-dev
+    ports:
+      - "5000:5000"
+    env_file: backend/.env
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/tsconfig.json:/app/tsconfig.json
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+    networks:
+      - emotion-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: emotion-frontend-dev
+    ports:
+      - "5173:5173" 
+    env_file: frontend/.env
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html 
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+    depends_on:
+      - backend
+    networks:
+      - emotion-net
+
+networks:
+  emotion-net:
