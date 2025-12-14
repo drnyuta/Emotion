@@ -1,0 +1,107 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__header {
+    padding: 30px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: #fdfdfd;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__messages {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    background-color: #f4effd;
+  }
+
+  &__message {
+    max-width: 80%;
+    padding: 8px 16px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    word-break: break-word;
+    font-family: var(--paragraph);
+    font-size: 16px;
+    line-height: 1.5;
+
+    p,
+    li {
+      font-family: inherit;
+      font-size: inherit;
+      margin: 0; 
+    }
+
+    &--user {
+      background-color: #d8b4fe;
+      align-self: flex-end;
+    }
+
+    &--assistant {
+      background-color: #fff;
+      align-self: flex-start;
+    }
+
+    &--thinking {
+      background-color: #fff;
+      align-self: flex-start;
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  &__input-area {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    gap: 8px;
+    border-top: 1px solid #e2e8f0;
+    background-color: #fdfdfd;
+
+    &__input {
+      flex: 1;
+      padding: 20px 20px;
+      border: 1px solid #ccc;
+      border-radius: 16px;
+      height: 24px;
+      font-size: 16px;
+      outline: none;
+      font-family: var(--paragraph);
+    }
+
+    &__send-button {
+      padding: 18px 40px;
+      font-size: 20px;
+      border: none;
+      border-radius: 16px;
+      background-color: var(--color-joy);
+      color: #000;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: #9333ea;
+      }
+    }
+  }
+}
