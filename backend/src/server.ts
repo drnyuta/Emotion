@@ -9,12 +9,22 @@ const PORT = process.env.PORT || 5000;
 app.get('/health', async (_req, res) => {
   try {
     await client.query('SELECT 1');
-    res.status(200).send('OKkk');
+    res.status(200).send('OK');
   } catch (err) {
     console.error('Healthcheck failed:', err);
     res.status(500).send('Database connection failed');
   }
 });
+
+// app.get('/entries', async (_req, res) => {
+//   try {
+//     const response = await client.query('SELECT * from diary_entries');
+//     res.json(response.rows); 
+//   } catch (err) {
+//     console.error('Healthcheck failed:', err);
+//     res.status(500).send('Database connection failed');
+//   }
+// });
 
 connectDB().then(() => {
   app.listen(5000, '0.0.0.0', () => {
