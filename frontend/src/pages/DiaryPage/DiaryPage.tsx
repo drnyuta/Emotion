@@ -1,35 +1,77 @@
+import { useCallback, useEffect, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
 import { EmotionCalendar } from "../../components/EmotionCalendar/EmotionCalendar";
 import DiaryEntry from "../../components/DiaryEntry/DiaryEntry";
-import { EmotionCategory } from "../../constants/emotions";
+import { getMonthDates, getEntryByDate } from "../../api/diary/diary";
+import { Entry } from "../../globalInterfaces";
+import { RingLoader } from "react-spinners";
 import "./DiaryPage.scss";
+import { mapDiaryEmotion } from "../../utils/mapDiaryEmotion";
 
 export const DiaryPage = () => {
-  const entries = [
-    {
-      id: "1",
-      date: new Date(2025, 11, 17),
-      emotions: [
-        { emotion: "happy", category: EmotionCategory.JOY },
-        { emotion: "anxious", category: EmotionCategory.FEAR },
-        { emotion: "calm", category: EmotionCategory.PEACE },
-      ],
-      content: `Today felt strangely fragmented — like I was moving through the day in pieces rather than as a whole person. The morning started off normally enough: I woke up early, made coffee, and tried to ease myself into the day with the intention of staying focused and calm. But even before I finished my first cup, I already felt this quiet sense of pressure building in my chest. Not panic, exactly — more like the sense that something was expected of me, though I couldn't name what. Work didn't go as planned. I had a presentation scheduled for 2 PM, and while I'd prepared thoroughly, I kept second-guessing myself throughout the day. Every time I reviewed my slides, I found something I wanted to change. By the time the meeting rolled around, I was exhausted from overthinking.`,
-    },
-  ];
+  const userId = 1;
 
-  const handleEdit = (id: string) => {
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
+  const [datesWithEntries, setDatesWithEntries] = useState<string[]>([]);
+  const [entry, setEntry] = useState<Entry | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadMonth = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const year = selectedDate.year();
+        const month = selectedDate.month() + 1;
+
+        const dates = await getMonthDates(userId, year, month);
+        setDatesWithEntries(dates);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load calendar data.");
+        setDatesWithEntries([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMonth();
+  }, [selectedDate]);
+
+  const handleSelectDate = useCallback(async (date: Dayjs) => {
+  try {
+    setSelectedDate(date);
+    setLoading(true);
+    const entryFromApi = await getEntryByDate(userId, date.format("YYYY-MM-DD"));
+    const mappedEntry = entryFromApi
+      ? { ...entryFromApi, emotions: entryFromApi.emotions.map(mapDiaryEmotion) }
+      : null;
+    setEntry(mappedEntry);
+  } catch (error) {
+    console.error(error);
+    setError("Failed to load diary entry.");
+    setEntry(null);
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
+
+  const handleEdit = (id: number) => {
     console.log("Edit entry:", id);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     console.log("Delete entry:", id);
   };
 
-  const handleAnalyse = (id: string) => {
+  const handleAnalyse = (id: number) => {
     console.log("Analyse entry with AI:", id);
   };
 
-  const handleViewMore = (id: string) => {
+  const handleViewMore = (id: number) => {
     console.log("View more:", id);
   };
 
@@ -42,22 +84,38 @@ export const DiaryPage = () => {
         emotional patterns and reconnect with yourself.
       </p>
 
-      <EmotionCalendar />
+      <EmotionCalendar
+        datesWithEntries={datesWithEntries}
+        selectedDate={selectedDate}
+        onSelectDate={handleSelectDate}
+      />
 
-      {entries.map((entry) => (
+      {error && (
+        <div className="error">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {loading && (
+        <div className="loading">
+          <p>Loading...</p>
+          <RingLoader color="#000000ff" size={20} />
+        </div>
+      )}
+
+      {!loading && !error && (
         <DiaryEntry
-          key={entry.id}
-          id={entry.id}
-          date={entry.date}
-          emotions={entry.emotions}
-          content={entry.content}
-          isEmpty={`${entry.content}`.length === 0}
-          onEdit={() => handleEdit(entry.id)}
-          onDelete={() => handleDelete(entry.id)}
-          onAnalyse={() => handleAnalyse(entry.id)}
-          onViewMore={() => handleViewMore(entry.id)}
+          id={entry?.id}
+          date={selectedDate.toDate()}
+          content={entry?.content}
+          emotions={entry?.emotions}
+          isEmpty={!entry && !loading }
+          onEdit={entry ? () => handleEdit(entry.id) : undefined}
+          onDelete={entry ? () => handleDelete(entry.id) : undefined}
+          onAnalyse={entry ? () => handleAnalyse(entry.id) : undefined}
+          onViewMore={entry ? () => handleViewMore(entry.id) : undefined}
         />
-      ))}
+      )}
     </div>
   );
 };

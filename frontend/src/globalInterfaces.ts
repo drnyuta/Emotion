@@ -5,7 +5,19 @@ export interface Message {
   content: string;
 }
 
-export interface DiaryEmotion {
-  emotion: string;
-  category: EmotionCategory;
+export interface DiaryEmotion {      
+  emotion: string;          
+  categoryId: number;      
+  category: EmotionCategory; 
+}
+
+export interface Entry {
+  id: number;
+  user_id: number;
+  entry_date: string; // YYYY-MM-DD
+  content: string;
+  question_id: number | null;
+  created_at: string;
+  updated_at: string;
+  emotions: DiaryEmotion[];
 }

@@ -14,7 +14,7 @@ export class DiaryController {
 
       const rows = await DiaryService.getDatesWithEntries(userId, year, month);
       const dates = rows.map((r: any) =>
-        r.entry_date.toISOString().slice(0, 10)
+        r.entry_date.toLocaleDateString("en-CA")
       );
 
       res.json({ success: true, dates });

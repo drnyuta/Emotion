@@ -9,7 +9,7 @@ import EmotionTag from "../EmotionTag/EmotionTag";
 import { DiaryEmotion } from "../../globalInterfaces";
 
 interface DiaryEntryProps {
-  id?: string;
+  id?: number;
   date?: Date;
   emotions?: DiaryEmotion[];
   content?: string;
