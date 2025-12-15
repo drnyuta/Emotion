@@ -4,7 +4,6 @@ import AiMagnifier from "../../assets/icons/ai-magnifier.svg";
 import { Button } from "../Button/Button";
 import EditIcon from "../../assets/icons/edit.svg";
 import DeleteIcon from "../../assets/icons/red-bin.svg";
-import { useNavigate } from "react-router-dom";
 import EmotionTag from "../EmotionTag/EmotionTag";
 import { DiaryEmotion } from "../../globalInterfaces";
 
@@ -20,6 +19,7 @@ interface DiaryEntryProps {
   onEdit?: () => void;
   onDelete?: () => void;
   onAnalyse?: () => void;
+  onCreate?: () => void;
 }
 
 export default function DiaryEntry({
@@ -33,9 +33,9 @@ export default function DiaryEntry({
   onEdit,
   onDelete,
   onAnalyse,
+  onCreate,
 }: DiaryEntryProps) {
   const [expanded, setExpanded] = useState(isExpanded);
-  const navigate = useNavigate();
 
   const handleViewMore = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -65,11 +65,16 @@ export default function DiaryEntry({
           <p>No entry for this day.</p>
         </div>
         <div className="diary-entry__actions">
-          <Button
-            text="Write"
-            variant="primary"
-            onClick={() => navigate("/diary/new")}
-          />
+          {onCreate && (
+            <Button
+              text="Write"
+              variant="primary"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCreate();
+              }}
+            />
+          )}
         </div>
       </div>
     );

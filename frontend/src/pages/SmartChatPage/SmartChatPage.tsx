@@ -1,5 +1,5 @@
 import  { useState } from "react";
-import { sendChatMessage } from "../../api/ai/chatApi";
+import { sendChatMessage } from "../../api/aiApi";
 import SmartChat from "../../components/SmartChat/SmartChat";
 import "./SmartChatPage.scss";
 import { Message } from "../../globalInterfaces";

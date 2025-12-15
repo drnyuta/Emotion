@@ -37,10 +37,10 @@ export const createEntry = async (
   emotions?: number[]
 ) => {
   const res = await axios.post(`${API_URL}/diary/new`, {
-    user_id: userId,
-    entry_date: entryDate,
+    userId,
+    entryDate,
     content,
-    question_id: questionId,
+    questionId,
     emotions,
   });
 

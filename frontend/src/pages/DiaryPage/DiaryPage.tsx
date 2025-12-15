@@ -2,11 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { EmotionCalendar } from "../../components/EmotionCalendar/EmotionCalendar";
 import DiaryEntry from "../../components/DiaryEntry/DiaryEntry";
-import {
-  getMonthDates,
-  getEntryByDate,
-  deleteEntry,
-} from "../../api/diary/diary";
+import { getMonthDates, getEntryByDate, deleteEntry } from "../../api/diary";
 import { Entry } from "../../globalInterfaces";
 import { RingLoader } from "react-spinners";
 import "./DiaryPage.scss";
@@ -47,30 +43,40 @@ export const DiaryPage = () => {
     loadMonth();
   }, [selectedDate]);
 
-  const handleSelectDate = useCallback(async (date: Dayjs) => {
+  const loadEntryByDate = useCallback(async (date: Dayjs) => {
     try {
-      setSelectedDate(date);
       setLoading(true);
+      setError(null);
+
       const entryFromApi = await getEntryByDate(
         userId,
         date.format("YYYY-MM-DD")
       );
+
       const mappedEntry = entryFromApi
         ? {
             ...entryFromApi,
             emotions: entryFromApi.emotions.map(mapDiaryEmotion),
           }
         : null;
-      setEntry(mappedEntry);
 
-    } catch (error) {
-      console.error(error);
+      setEntry(mappedEntry);
+    } catch (err) {
+      console.error(err);
       setError("Failed to load diary entry.");
       setEntry(null);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  const handleSelectDate = (date: Dayjs) => {
+    setSelectedDate(date);
+  };
+
+  useEffect(() => {
+    loadEntryByDate(selectedDate);
+  }, [selectedDate, loadEntryByDate]);
 
   const handleEdit = (entryId: number) => {
     navigate(`/diary/edit/${entryId}`);
@@ -116,6 +122,14 @@ export const DiaryPage = () => {
     console.log("View more:", id);
   };
 
+  const handleCreate = () => {
+    navigate("/diary/new", {
+      state: {
+        entryDate: selectedDate.format("YYYY-MM-DD"),
+      },
+    });
+  };
+
   return (
     <div className="diary-page">
       <h1>Write About Your Day</h1>
@@ -151,6 +165,7 @@ export const DiaryPage = () => {
           onDelete={entry ? () => showDeleteConfirm(entry.id) : undefined}
           onAnalyse={entry ? () => handleAnalyse(entry.id) : undefined}
           onViewMore={entry ? () => handleViewMore(entry.id) : undefined}
+          onCreate={!entry ? handleCreate : undefined}
         />
       )}
     </div>

@@ -12,6 +12,11 @@ export interface DiaryEmotion {
   category: EmotionCategory; 
 }
 
+export interface Emotion {
+  id: number;
+  name: string;
+}
+
 export interface Entry {
   id: number;
   user_id: number;
@@ -21,4 +26,10 @@ export interface Entry {
   created_at: string;
   updated_at: string;
   emotions: DiaryEmotion[];
+}
+
+export interface CategoryWithEmotions {
+  id: number;
+  name: string;
+  emotions: Emotion[];
 }

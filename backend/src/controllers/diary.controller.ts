@@ -44,6 +44,9 @@ export class DiaryController {
       if (!userId || !entryDate || !content || !emotions)
         throw new Error("userId, entryDate, content and emotions are required");
 
+      if (!Array.isArray(emotions))
+        throw new Error("emotions must be an array");
+      
       const entry = await DiaryService.createEntry(
         userId,
         entryDate,
@@ -83,7 +86,7 @@ export class DiaryController {
       res.status(400).json({ success: false, error: err.message });
     }
   }
-  
+
   static async deleteEntry(req: Request, res: Response) {
     try {
       const entryId = Number(req.params.id);
