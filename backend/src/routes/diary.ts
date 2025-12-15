@@ -3,19 +3,22 @@ import { DiaryController } from "../controllers/diary.controller";
 
 const router = Router();
 
-// GET /api/diary/month?user_id=1&year=2025&month=12
+// GET /diary/month?user_id=1&year=2025&month=12
 router.get("/month", DiaryController.getMonthDates);
 
-// GET /api/diary/entry?user_id=1&entry_date=2025-12-14
+// GET /diary/entry?user_id=1&entry_date=2025-12-14
 router.get("/entry", DiaryController.getEntry);
 
-// POST /api/diary/new
+// POST /diary/new
 router.post("/new", DiaryController.createNew);
 
-// PUT /api/diary/update/:id
+// PUT /diary/update/:id
 router.put("/update/:id", DiaryController.updateEntry);
 
-// DELETE /api/diary/delete/:id
+// DELETE /diary/delete/:id
 router.delete("/delete/:id", DiaryController.deleteEntry);
+
+// GET /diary/categories
+router.get("/categories", DiaryController.getCategoriesWithEmotions);
 
 export default router;
