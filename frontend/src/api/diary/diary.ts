@@ -15,13 +15,10 @@ export const getMonthDates = async (
     },
   });
 
-  return res.data.dates; 
+  return res.data.dates;
 };
 
-export const getEntryByDate = async (
-  userId: number,
-  date: string
-) => {
+export const getEntryByDate = async (userId: number, date: string) => {
   const res = await axios.get(`${API_URL}/diary/entry`, {
     params: {
       user_id: userId,
@@ -29,5 +26,49 @@ export const getEntryByDate = async (
     },
   });
 
-  return res.data.entry; 
+  return res.data.entry;
+};
+
+export const createEntry = async (
+  userId: number,
+  entryDate: string,
+  content: string,
+  questionId?: number,
+  emotions?: number[]
+) => {
+  const res = await axios.post(`${API_URL}/diary/new`, {
+    user_id: userId,
+    entry_date: entryDate,
+    content,
+    question_id: questionId,
+    emotions,
+  });
+
+  return res.data.entry;
+};
+
+export const updateEntry = async (
+  entryId: number,
+  userId: number,
+  content: string,
+  questionId?: number | null,
+  emotions?: number[]
+) => {
+  const res = await axios.put(`${API_URL}/diary/update/${entryId}`, {
+    entry_id: entryId,
+    user_id: userId,
+    content,
+    question_id: questionId,
+    emotions,
+  });
+
+  return res.data.entry;
+};
+
+export const deleteEntry = async (entryId: number) => {
+  await axios.delete(`${API_URL}/diary/delete/${entryId}`, {
+    params: {
+      entry_id: entryId,
+    },
+  });
 };

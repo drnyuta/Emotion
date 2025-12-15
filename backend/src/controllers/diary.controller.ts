@@ -40,15 +40,16 @@ export class DiaryController {
 
   static async createNew(req: Request, res: Response) {
     try {
-      const { userId, entryDate, content, questionId } = req.body;
-      if (!userId || !entryDate || !content)
-        throw new Error("userId, entryDate and content are required");
+      const { userId, entryDate, content, questionId, emotions } = req.body;
+      if (!userId || !entryDate || !content || !emotions)
+        throw new Error("userId, entryDate, content and emotions are required");
 
       const entry = await DiaryService.createEntry(
         userId,
         entryDate,
         content,
-        questionId
+        questionId,
+        emotions
       );
       res.json({ success: true, entry });
     } catch (err: any) {

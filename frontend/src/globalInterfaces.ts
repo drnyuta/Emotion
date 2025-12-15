@@ -5,7 +5,8 @@ export interface Message {
   content: string;
 }
 
-export interface DiaryEmotion {      
+export interface DiaryEmotion {  
+  emotionId: number;    
   emotion: string;          
   categoryId: number;      
   category: EmotionCategory; 

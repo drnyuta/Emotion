@@ -26,16 +26,20 @@ export const getEntryByDate = async (userId: number, entryDate: string) => {
   const entry = entryRes.rows[0];
 
   const emotionsRes = await client.query(
-    `SELECT e.name as emotion_name, ec.id as category_id, ec.name as category_name
-     FROM emotions e
-     JOIN entry_emotions ee ON ee.emotion_id = e.id
-     JOIN emotion_categories ec ON ec.id = e.category_id
-     WHERE ee.entry_id = $1`,
+    ` SELECT e.id as emotion_id, e.name as emotion_name,
+             ec.id as category_id, ec.name as category_name
+      FROM emotions e
+      JOIN entry_emotions ee ON ee.emotion_id = e.id
+      JOIN emotion_categories ec ON ec.id = e.category_id
+      WHERE ee.entry_id = $1`,
     [entry.id]
   );
 
   const emotions = emotionsRes.rows.map((row: any) => ({
-    emotion: row.emotion_name,
+    emotion: {
+      id: row.emotion_id,
+      name: row.emotion_name,
+    },
     category: {
       id: row.category_id,
       name: row.category_name,
@@ -59,7 +63,7 @@ export const createEntry = async (
   entryDate: string,
   content: string,
   questionId?: number,
-  emotions?: number[] 
+  emotions?: number[]
 ) => {
   const res = await client.query(
     `INSERT INTO diary_entries (user_id, entry_date, content, question_id, created_at, updated_at)
@@ -165,7 +169,7 @@ export const updateEntry = async (
 
     if (updatedRow.rows.length === 0) return null;
 
-    const entryDate = updatedRow.rows[0].entry_date.toLocaleDateString("en-CA")
+    const entryDate = updatedRow.rows[0].entry_date.toLocaleDateString("en-CA");
     const updatedEntry = await getEntryByDate(userId, entryDate);
     return updatedEntry;
   } catch (err) {
