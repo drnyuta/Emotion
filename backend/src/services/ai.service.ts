@@ -65,7 +65,9 @@ export class AIService {
         userId,
         message,
       });
-      throw new ValidationError("Your message contains unreadable characters. Please write a meaningful message");
+      throw new ValidationError(
+        "Your message contains unreadable characters. Please write a meaningful message"
+      );
     }
 
     if (!chatHistory[userId]) chatHistory[userId] = [];
@@ -143,8 +145,7 @@ export class AIService {
       const cleaned = cleanAIJson(rawResponse.response.text());
 
       logger.info({
-        type: "DAILY_ANALYSIS_RESPONSE",
-        responsePreview: cleaned.slice(0, 100),
+        responsePreview: String(JSON.stringify(cleaned)).slice(0, 100),
       });
 
       return cleaned;
@@ -240,7 +241,7 @@ export class AIService {
 
       logger.info({
         type: "LIMITED_WEEKLY_REPORT_RESPONSE",
-        responsePreview: cleaned.slice(0, 100),
+        responsePreview: String(JSON.stringify(cleaned)).slice(0, 100),
       });
 
       return cleaned;

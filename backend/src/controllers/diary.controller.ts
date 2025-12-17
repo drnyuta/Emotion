@@ -94,13 +94,4 @@ export class DiaryController {
       res.status(400).json({ success: false, error: err.message });
     }
   }
-
-  static async getCategoriesWithEmotions(req: Request, res: Response) {
-    try {
-      const categories = await DiaryService.getCategoriesWithEmotions();
-      res.json({ success: true, categories });
-    } catch (err: any) {
-      res.status(400).json({ success: false, error: err.message });
-    }
-  }
 }
