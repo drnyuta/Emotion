@@ -18,7 +18,4 @@ router.put("/update/:id", DiaryController.updateEntry);
 // DELETE /diary/delete/:id
 router.delete("/delete/:id", DiaryController.deleteEntry);
 
-// GET /diary/categories
-router.get("/categories", DiaryController.getCategoriesWithEmotions);
-
 export default router;
