@@ -1,0 +1,31 @@
+.emotion-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__search {
+    max-width: 300px;
+  }
+
+  &__menu {
+    background: #fff;
+    max-width: 200px;
+    border: none;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__error {
+    color: var(--color-red);
+    font-size: 14px;
+  }
+
+  &__no-emotions {
+    font-size: 14px;
+  }
+}

@@ -5,6 +5,7 @@ import "./styles/index.scss";
 import SmartChatPage from "./pages/SmartChatPage/SmartChatPage";
 import { ConfigProvider } from "antd";
 import { CreateEntryPage } from "./pages/CreateEntryPage/CreateEntryPage";
+import { EditEntryPage } from "./pages/EditEntryPage/EditEntryPage";
 
 export const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ export const App: React.FC = () => {
                 <Routes>
                   <Route path="diary" element={<DiaryPage />} />
                   <Route path="diary/new" element={<CreateEntryPage />} />
+                  <Route path="diary/edit" element={<EditEntryPage />} />
                   <Route path="smart-chat" element={<SmartChatPage />} />
                 </Routes>
               </Layout>

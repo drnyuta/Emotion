@@ -55,10 +55,9 @@ export const updateEntry = async (
   emotions?: number[]
 ) => {
   const res = await axios.put(`${API_URL}/diary/update/${entryId}`, {
-    entry_id: entryId,
-    user_id: userId,
+    userId,
     content,
-    question_id: questionId,
+    questionId,
     emotions,
   });
 

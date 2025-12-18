@@ -78,8 +78,12 @@ export const DiaryPage = () => {
     loadEntryByDate(selectedDate);
   }, [selectedDate, loadEntryByDate]);
 
-  const handleEdit = (entryId: number) => {
-    navigate(`/diary/edit/${entryId}`);
+  const handleEdit = () => {
+    navigate("/diary/edit", {
+      state: {
+        entryDate: selectedDate.format("YYYY-MM-DD"),
+      },
+    });
   };
 
   const handleDelete = async (id: number) => {
@@ -161,7 +165,7 @@ export const DiaryPage = () => {
           content={entry?.content}
           emotions={entry?.emotions}
           isEmpty={!entry && !loading}
-          onEdit={entry ? () => handleEdit(entry.id) : undefined}
+          onEdit={entry ? handleEdit : undefined}
           onDelete={entry ? () => showDeleteConfirm(entry.id) : undefined}
           onAnalyse={entry ? () => handleAnalyse(entry.id) : undefined}
           onViewMore={entry ? () => handleViewMore(entry.id) : undefined}
