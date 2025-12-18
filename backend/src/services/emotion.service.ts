@@ -22,3 +22,19 @@ export const getCategoriesWithEmotions = async () => {
 
   return result;
 };
+
+export const getEmotionById = async (id: number) => {
+  const res = await client.query(
+    `SELECT id, name, definition, triggers, recommendations
+     FROM emotions
+     WHERE id = $1`,
+    [id]
+  );
+
+  if (!res.rows.length) {
+    throw new Error("Emotion not found");
+  }
+
+  return res.rows[0];
+};
+
