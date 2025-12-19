@@ -6,6 +6,8 @@ import SmartChatPage from "./pages/SmartChatPage/SmartChatPage";
 import { ConfigProvider } from "antd";
 import { CreateEntryPage } from "./pages/CreateEntryPage/CreateEntryPage";
 import { EditEntryPage } from "./pages/EditEntryPage/EditEntryPage";
+import { EmotionWheelPage } from "./pages/EmotionWheelPage/EmotionWheelPage";
+import { EmotionAccordeonPage } from "./pages/EmotionAccordeonPage/EmotionAccordeonPage";
 
 export const App: React.FC = () => {
   return (
@@ -26,6 +28,8 @@ export const App: React.FC = () => {
                   <Route path="diary" element={<DiaryPage />} />
                   <Route path="diary/new" element={<CreateEntryPage />} />
                   <Route path="diary/edit" element={<EditEntryPage />} />
+                  <Route path="emotion-wheel" element={<EmotionWheelPage />} />
+                  <Route path="emotions/:categoryName" element={<EmotionAccordeonPage />} />
                   <Route path="smart-chat" element={<SmartChatPage />} />
                 </Routes>
               </Layout>

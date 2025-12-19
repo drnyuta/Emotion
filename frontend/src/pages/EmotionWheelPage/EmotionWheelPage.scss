@@ -1,0 +1,25 @@
+.emotion-wheel-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+
+  &__description {
+    background-color: #FFF3FE;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__description-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__list {
+    margin: 0;
+  }
+}

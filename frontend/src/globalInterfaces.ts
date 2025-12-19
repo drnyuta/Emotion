@@ -5,11 +5,11 @@ export interface Message {
   content: string;
 }
 
-export interface DiaryEmotion {  
-  emotionId: number;    
-  emotion: string;          
-  categoryId: number;      
-  category: EmotionCategory; 
+export interface DiaryEmotion {
+  emotionId: number;
+  emotion: string;
+  categoryId: number;
+  category: EmotionCategory;
 }
 
 export interface Emotion {
@@ -32,4 +32,12 @@ export interface CategoryWithEmotions {
   id: number;
   name: string;
   emotions: Emotion[];
+}
+
+export interface EmotionDetails {
+  id: number;
+  name: string;
+  definition: string;
+  triggers: string[];
+  recommendations: string[];
 }
