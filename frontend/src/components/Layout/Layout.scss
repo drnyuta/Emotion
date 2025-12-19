@@ -1,3 +1,5 @@
+@import '../../styles/variables/breakpoints';
+
 .layout {
   display: flex;
   min-height: 100vh;
@@ -9,5 +11,15 @@
     width: calc(100vw - var(--sidebar-width));
     box-sizing: border-box;
     padding: 50px 70px;
+
+    @include tablet-only {
+      width: calc(100vw - var(--sidebar-width-tablet));
+    }
+
+    @media (max-width: 768px) {
+      width: 100vw;
+      padding: 20px 16px;
+      padding-top: calc(var(--mobile-header-height) + 20px);
+    }
   }
 }

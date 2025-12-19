@@ -4,13 +4,24 @@
   flex-direction: column;
   gap: 34px;
 
+  @media (max-width: 480px) {
+    gap: 20px;
+  }
+
   &__description {
-    background-color: #FFF3FE;
+    background-color: #fff3fe;
     padding: 20px;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
+    p {
+      font-size: 18px;
+
+      @media (max-width: 480px) {
+        font-size: 16px;
+      }
+    }
   }
 
   &__description-list {
@@ -21,5 +32,12 @@
 
   &__list {
     margin: 0;
+    li {
+      font-size: 18px;
+
+      @media (max-width: 480px) {
+        font-size: 16px;
+      }
+    }
   }
 }

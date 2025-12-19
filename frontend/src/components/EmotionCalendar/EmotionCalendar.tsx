@@ -22,10 +22,8 @@ export const EmotionCalendar = ({
     return null;
   };
 
-  const wrapperStyle = { width: 400 };
-
   return (
-    <div style={wrapperStyle}>
+    <div className="emotion-calendar">
       <Calendar
         fullscreen={false}
         value={selectedDate}

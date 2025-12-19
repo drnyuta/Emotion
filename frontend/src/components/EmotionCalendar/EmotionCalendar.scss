@@ -1,3 +1,5 @@
+@import '../../styles/variables/breakpoints';
+
 .dot {
   position: absolute;
   bottom: -9px;
@@ -6,4 +8,17 @@
   height: 6px;
   border-radius: 50%;
   background-color: var(--color-dusty-purple);
+}
+
+.emotion-calendar {
+  width: 400px;
+
+  @include tablet {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  @include mobile {
+    width: 100%;
+  }
 }

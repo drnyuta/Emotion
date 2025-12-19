@@ -61,72 +61,74 @@ export const EntryForm = ({
 
   return (
     <div className="entry-form">
-      <div className="entry-form__left">
-        <h1 className="entry-form__date">{date}</h1>
+      <div className="entry-form__content">
+        <div className="entry-form__left">
+          <h1 className="entry-form__date">{date}</h1>
 
-        <div className="entry-form__editor">
-          <TextArea
-            placeholder="Write about your day..."
-            value={content}
-            onChange={(e) => onContentChange(e.target.value)}
-            autoSize={{ minRows: 10, maxRows: 20 }}
-            className="entry-form__textarea"
-          />
+          <div className="entry-form__editor">
+            <TextArea
+              placeholder="Write about your day..."
+              value={content}
+              onChange={(e) => onContentChange(e.target.value)}
+              autoSize={{ minRows: 10, maxRows: 20 }}
+              className="entry-form__textarea"
+            />
+          </div>
+
+          <div className="entry-form__hint">
+            <p>
+              Hint: use <a href='/questions' className="highlight">Question of the day</a> to
+              inspire your journaling.
+            </p>
+          </div>
         </div>
 
-        <div className="entry-form__hint">
-          <p>
-            Hint: use <a href='/questions' className="highlight">Question of the day</a> to
-            inspire your journaling.
-          </p>
-        </div>
+        <div className="entry-form__right">
+          <div className="entry-form__emotion-section">
+            <p className="entry-form__emotion-title">
+              <img
+                src={Emoji}
+                alt="emoji"
+                className="entry-form__emoji"
+              />
+              Choose your{" "}
+              <a href="/emotion-wheel" className="highlight">
+                emotions:
+              </a>
+            </p>
 
-        <div className="entry-form__actions">
-          <Button
-            text="Save"
-            variant="primary"
-            onClick={onSave}
-            disabled={content.trim().length < 3 || selectedEmotions.length === 0}
-          />
-          <Button text="Cancel" variant="secondary" onClick={onCancel} />
+            <EmotionSelector
+              categories={categories}
+              loading={loading}
+              error={error}
+              onEmotionClick={handleEmotionAdd}
+            />
+
+            {selectedEmotions.length > 0 && (
+              <div className="entry-form__selected-emotions">
+                {selectedEmotions.map((item) => (
+                  <EmotionTag
+                    key={item.emotionId}
+                    emotionCategory={getCategoryEnum(item.category)}
+                    emotion={item.emotion}
+                    showRemove
+                    onRemove={handleEmotionRemove}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="entry-form__right">
-        <div className="entry-form__emotion-section">
-          <p className="entry-form__emotion-title">
-            <img
-              src={Emoji}
-              alt="emoji"
-              className="entry-form__emoji"
-            />
-            Choose your{" "}
-            <a href="/emotion-wheel" className="highlight">
-              emotions:
-            </a>
-          </p>
-
-          <EmotionSelector
-            categories={categories}
-            loading={loading}
-            error={error}
-            onEmotionClick={handleEmotionAdd}
-          />
-
-          {selectedEmotions.length > 0 && (
-            <div className="entry-form__selected-emotions">
-              {selectedEmotions.map((item) => (
-                <EmotionTag
-                  key={item.emotionId}
-                  emotionCategory={getCategoryEnum(item.category)}
-                  emotion={item.emotion}
-                  showRemove
-                  onRemove={handleEmotionRemove}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+      <div className="entry-form__actions">
+        <Button
+          text="Save"
+          variant="primary"
+          onClick={onSave}
+          disabled={content.trim().length < 3 || selectedEmotions.length === 0}
+        />
+        <Button text="Cancel" variant="secondary" onClick={onCancel} />
       </div>
     </div>
   );
