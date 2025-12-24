@@ -1,4 +1,4 @@
-@import '../../styles/variables/breakpoints';
+@use "../../styles/variables/breakpoints";
 
 .entry-form {
   display: flex;
@@ -11,12 +11,12 @@
     justify-content: space-between;
     gap: 40px;
 
-    @include tablet {
+    @include breakpoints.tablet {
       flex-direction: column;
       gap: 30px;
     }
 
-    @include mobile {
+    @include breakpoints.mobile {
       gap: 20px;
     }
   }
@@ -35,7 +35,7 @@
     color: #000;
     font-family: var(--font-paragraph);
 
-    @include mobile {
+    @include breakpoints.mobile {
       font-size: 18px;
     }
   }
@@ -45,7 +45,7 @@
     border: 1px solid #e5e7eb;
     padding: 20px 10px;
 
-    @include mobile {
+    @include breakpoints.mobile {
       padding: 16px 8px;
     }
   }
@@ -63,7 +63,7 @@
       border-color: #000;
     }
 
-    @include mobile {
+    @include breakpoints.mobile {
       font-size: 13px;
       line-height: 1.8;
     }
@@ -77,7 +77,7 @@
       font-size: 16px;
       color: #000;
 
-      @include mobile {
+      @include breakpoints.mobile {
         font-size: 14px;
       }
     }
@@ -102,7 +102,7 @@
     background: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
 
-    @include mobile {
+    @include breakpoints.mobile {
       gap: 12px;
       padding: 12px;
     }
@@ -114,10 +114,10 @@
     padding-top: 30px;
     border-top: 1px solid #e2d6df;
 
-    @include mobile {
+    @include breakpoints.mobile {
       gap: 12px;
       padding-top: 20px;
-      
+
       button {
         flex: 1;
       }
@@ -131,12 +131,12 @@
     max-height: calc(100vh - 120px);
     overflow-y: auto;
 
-    @include tablet {
+    @include breakpoints.tablet {
       max-height: none;
       padding-top: 0;
     }
 
-    @include mobile {
+    @include breakpoints.mobile {
       min-width: auto;
       max-width: none;
       width: 100%;
@@ -148,7 +148,7 @@
     flex-direction: column;
     gap: 16px;
 
-    @include mobile {
+    @include breakpoints.mobile {
       gap: 12px;
     }
   }
@@ -167,7 +167,7 @@
       }
     }
 
-    @include mobile {
+    @include breakpoints.mobile {
       font-size: 14px;
     }
   }
@@ -175,8 +175,32 @@
   &__emoji {
     height: 24px;
 
-    @include mobile {
+    @include breakpoints.mobile {
       height: 20px;
+    }
+  }
+
+  &__question {
+    background: rgba(255, 255, 255, 0.5);
+    border-left: 6px solid #9b7fd4;
+    border-radius: 8px;
+    padding: 12px 16px;
+
+    @include breakpoints.mobile {
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+  }
+
+  &__question-text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #000;
+    font-weight: 500;
+
+    @include breakpoints.mobile {
+      font-size: 14px;
     }
   }
 }

@@ -4,6 +4,7 @@ import { Breadcrumb, Modal } from "antd";
 import { EntryForm } from "../../components/EntryForm/EntryForm";
 import { getCategoriesWithEmotions } from "../../api/emotions";
 import { updateEntry, getEntryByDate } from "../../api/diary";
+import { getQuestionById } from "../../api/questions";
 import BackArrow from "../../assets/icons/arrow-left.svg";
 import { RingLoader } from "react-spinners";
 import "./EditEntryPage.scss";
@@ -22,6 +23,7 @@ export const EditEntryPage = () => {
   const location = useLocation();
 
   const [content, setContent] = useState("");
+  const [questionText, setQuestionText] = useState<string | null>(null);
   const [selectedEmotions, setSelectedEmotions] = useState<DiaryEmotion[]>([]);
   const [categories, setCategories] = useState<CategoryWithEmotions[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,6 +78,15 @@ export const EditEntryPage = () => {
         );
 
         setSelectedEmotions(mapped);
+      }
+
+      if (entry.question_id) {
+        try {
+          const question = await getQuestionById(entry.question_id);
+          setQuestionText(question.question_text);
+        } catch (err) {
+          console.error("Failed to load question:", err);
+        }
       }
 
       setError(null);
@@ -184,6 +195,7 @@ export const EditEntryPage = () => {
           date={formattedDate}
           content={content}
           onContentChange={setContent}
+          questionText={questionText}
           selectedEmotions={selectedEmotions}
           onEmotionsChange={setSelectedEmotions}
           categories={categories}
@@ -191,6 +203,14 @@ export const EditEntryPage = () => {
           error={emotionError}
           onSave={handleSave}
           onCancel={handleCancel}
+          onPickQuestion={() =>
+            navigate("/questions", {
+              state: {
+                from: "/diary/edit",
+                entryDate
+              },
+            })
+          }
         />
       </div>
     </div>

@@ -13,6 +13,7 @@ interface EntryFormProps {
   date: string;
   content: string;
   onContentChange: (content: string) => void;
+  questionText?: string | null;
   selectedEmotions: DiaryEmotion[];
   onEmotionsChange: (emotions: DiaryEmotion[]) => void;
   categories: CategoryWithEmotions[];
@@ -20,12 +21,14 @@ interface EntryFormProps {
   error?: string | null;
   onSave: () => void;
   onCancel: () => void;
+  onPickQuestion: () => void;
 }
 
 export const EntryForm = ({
   date,
   content,
   onContentChange,
+  questionText,
   selectedEmotions,
   onEmotionsChange,
   categories,
@@ -33,6 +36,7 @@ export const EntryForm = ({
   error = null,
   onSave,
   onCancel,
+  onPickQuestion,
 }: EntryFormProps) => {
   const handleEmotionAdd = (
     id: number,
@@ -65,6 +69,12 @@ export const EntryForm = ({
         <div className="entry-form__left">
           <h1 className="entry-form__date">{date}</h1>
 
+          {questionText && (
+            <div className="entry-form__question">
+              <p className="entry-form__question-text">{questionText}</p>
+            </div>
+          )}
+
           <div className="entry-form__editor">
             <TextArea
               placeholder="Write about your day..."
@@ -77,8 +87,11 @@ export const EntryForm = ({
 
           <div className="entry-form__hint">
             <p>
-              Hint: use <a href='/questions' className="highlight">Question of the day</a> to
-              inspire your journaling.
+              Hint: use{" "}
+              <span className="highlight" onClick={onPickQuestion}>
+                Question of the day
+              </span>
+              to inspire your journaling.
             </p>
           </div>
         </div>
@@ -86,11 +99,7 @@ export const EntryForm = ({
         <div className="entry-form__right">
           <div className="entry-form__emotion-section">
             <p className="entry-form__emotion-title">
-              <img
-                src={Emoji}
-                alt="emoji"
-                className="entry-form__emoji"
-              />
+              <img src={Emoji} alt="emoji" className="entry-form__emoji" />
               Choose your{" "}
               <a href="/emotion-wheel" className="highlight">
                 emotions:

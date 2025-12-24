@@ -41,3 +41,8 @@ export interface EmotionDetails {
   triggers: string[];
   recommendations: string[];
 }
+
+export interface Question {
+  id: number;
+  question_text: string;
+}

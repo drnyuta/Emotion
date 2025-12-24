@@ -8,6 +8,8 @@ import { CreateEntryPage } from "./pages/CreateEntryPage/CreateEntryPage";
 import { EditEntryPage } from "./pages/EditEntryPage/EditEntryPage";
 import { EmotionWheelPage } from "./pages/EmotionWheelPage/EmotionWheelPage";
 import { EmotionAccordeonPage } from "./pages/EmotionAccordeonPage/EmotionAccordeonPage";
+import { QuestionsPage } from "./pages/QuestionsPage/QuestionsPage";
+import { DiaryFromQuestionPage } from "./pages/DiaryFromQuestionPage/DiaryFromQuestionPage";
 
 export const App: React.FC = () => {
   return (
@@ -30,6 +32,8 @@ export const App: React.FC = () => {
                   <Route path="diary/edit" element={<EditEntryPage />} />
                   <Route path="emotion-wheel" element={<EmotionWheelPage />} />
                   <Route path="emotions/:categoryName" element={<EmotionAccordeonPage />} />
+                  <Route path="questions" element={<QuestionsPage />} />
+                  <Route path="/diary/from-question" element={<DiaryFromQuestionPage />} />
                   <Route path="smart-chat" element={<SmartChatPage />} />
                 </Routes>
               </Layout>

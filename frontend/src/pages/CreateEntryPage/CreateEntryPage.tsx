@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Breadcrumb, Modal } from "antd";
 import { EntryForm } from "../../components/EntryForm/EntryForm";
 import { getCategoriesWithEmotions } from "../../api/emotions";
+import { getQuestionById } from "../../api/questions";
 import BackArrow from "../../assets/icons/arrow-left.svg";
 import "./CreateEntryPage.scss";
 import { CategoryWithEmotions, DiaryEmotion } from "../../globalInterfaces";
@@ -13,8 +14,10 @@ import { RingLoader } from "react-spinners";
 export const CreateEntryPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const [content, setContent] = useState("");
+  const [questionText, setQuestionText] = useState<string | null>(null);
   const [selectedEmotions, setSelectedEmotions] = useState<DiaryEmotion[]>([]);
   const [categories, setCategories] = useState<CategoryWithEmotions[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +26,7 @@ export const CreateEntryPage = () => {
 
   const entryDate = location.state?.entryDate ?? dayjs().format("YYYY-MM-DD");
   const formattedDate = dayjs(entryDate).format("MMMM D, YYYY");
+  const questionId = searchParams.get("questionId");
 
   const userId = 1;
 
@@ -50,11 +54,32 @@ export const CreateEntryPage = () => {
     loadEmotions();
   }, []);
 
+  useEffect(() => {
+    const loadQuestion = async () => {
+      if (questionId) {
+        try {
+          const question = await getQuestionById(Number(questionId));
+          setQuestionText(question.question_text);
+        } catch (err) {
+          console.error("Failed to load question:", err);
+        }
+      }
+    };
+
+    loadQuestion();
+  }, [questionId]);
+
   const handleSave = async () => {
     try {
       setLoading(true);
       const emotionIds = selectedEmotions.map((e) => e.emotionId);
-      await createEntry(userId, entryDate, content, undefined, emotionIds);
+      await createEntry(
+        userId,
+        entryDate,
+        content,
+        questionId ? Number(questionId) : undefined,
+        emotionIds
+      );
       navigate("/diary");
     } catch (err) {
       console.error(err);
@@ -103,12 +128,21 @@ export const CreateEntryPage = () => {
           date={formattedDate}
           content={content}
           onContentChange={setContent}
+          questionText={questionText}
           selectedEmotions={selectedEmotions}
           onEmotionsChange={setSelectedEmotions}
           categories={categories}
           error={emotionError}
           onSave={handleSave}
           onCancel={handleCancel}
+          onPickQuestion={() =>
+            navigate("/questions", {
+              state: {
+                from: "/diary/new",
+                entryDate,
+              },
+            })
+          }
         />
       </div>
     </div>
