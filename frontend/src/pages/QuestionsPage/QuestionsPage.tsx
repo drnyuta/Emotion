@@ -4,6 +4,7 @@ import "./QuestionsPage.scss";
 import { Question } from "../../globalInterfaces";
 import { useLocation, useNavigate } from "react-router-dom";
 import PencilIcon from "../../assets/icons/pencil.svg";
+import { RingLoader } from "react-spinners";
 
 export const QuestionsPage = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -43,15 +44,10 @@ export const QuestionsPage = () => {
   if (loading) {
     return (
       <div className="questions-page">
-        <div className="questions-page__loading">Loading questions...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="questions-page">
-        <div className="questions-page__error">{error}</div>
+        <div className="questions-page--loading">
+          <RingLoader color="#7c3aed" size={60} />
+          <p>Loading questions...</p>
+        </div>
       </div>
     );
   }
@@ -65,20 +61,24 @@ export const QuestionsPage = () => {
         to open your diary and write your response.
       </p>
 
-      <ul className="questions-page__list">
-        {questions.map((question) => (
-          <li
-            key={question.id}
-            className="questions-page__item"
-            onClick={() => handleQuestionClick(question)}
-          >
-            <p className="questions-page__question">
-              <img src={PencilIcon} alt="pencil icon" />
-              {question.question_text}
-            </p>
-          </li>
-        ))}
-      </ul>
+      {error && <div className="questions-page__error">{error}</div>}
+
+      {!error && (
+        <ul className="questions-page__list">
+          {questions.map((question) => (
+            <li
+              key={question.id}
+              className="questions-page__item"
+              onClick={() => handleQuestionClick(question)}
+            >
+              <p className="questions-page__question">
+                <img src={PencilIcon} alt="pencil icon" />
+                {question.question_text}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

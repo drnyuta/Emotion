@@ -74,16 +74,14 @@
     }
   }
 
-  &__loading {
-    text-align: center;
-    padding: 40px;
-    font-size: 16px;
-    color: #000;
+  &--loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
   }
 
   &__error {
-    text-align: center;
-    padding: 40px;
     color: var(--color-red);
     font-size: 16px;
   }
