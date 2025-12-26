@@ -1,0 +1,26 @@
+.reports-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+
+  @media (max-width: 480px) {
+    gap: 20px;
+  }
+
+  &__filters{
+    display: flex;
+    gap: 100px;
+  }
+
+  &__filters-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &__select {
+    min-width: 140px;
+    min-height: 40px;
+  }
+}

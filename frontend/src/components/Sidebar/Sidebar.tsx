@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { menuItems, MenuItem } from "../../constants/menuItems";
+import { MENU_ITEMS, MenuItem } from "../../constants/menuItems";
 import BurgerIcon from "../../assets/icons/burger-menu.svg";
 import "./Sidebar.scss";
 
@@ -67,7 +67,7 @@ export const Sidebar = () => {
 
         <nav className="sidebar__nav">
           <ul className="sidebar__nav-list">
-            {menuItems.map((item: MenuItem) => (
+            {MENU_ITEMS.map((item: MenuItem) => (
               <li key={item.label} className="sidebar__nav-list-item">
                 <NavLink
                   to={item.path}
