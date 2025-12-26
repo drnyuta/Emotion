@@ -349,9 +349,9 @@ VALUES
 (1, 'weekly', CURRENT_DATE - INTERVAL '7 days', CURRENT_DATE, 
 '{
   "overview": "This week shows a generally stable emotional state with occasional fluctuations connected to stress, workload expectations, and periods of mental fatigue.",
-  "dominant_emotion": "Joy",
-  "main_triggers": ["Work tasks", "Meetings", "Evening fatigue"],
-  "recurring_patterns": ["Evening fatigue consistently lowers mood", "Improvement with routine"],
+  "dominantEmotion": "Joy",
+  "mainTriggers": ["Work tasks", "Meetings", "Evening fatigue"],
+  "recurringPatterns": ["Evening fatigue consistently lowers mood", "Improvement with routine"],
   "recommendations": ["Establish one daily stabilizing routine", "Split tasks into smaller steps", "Set boundaries for late-evening thinking", "Reflect on successful days"]
 }', NOW() - INTERVAL '7 days', NOW() - INTERVAL '7 days');
 
@@ -360,8 +360,8 @@ INSERT INTO ai_reports (user_id, entry_id, report_type, report_date, content, cr
 VALUES
 (1, 14, 'daily', CURRENT_DATE - INTERVAL '1 day',
 '{
-  "detected_emotions": ["Fatigue", "Relief"],
-  "main_triggers": ["End of week tasks"],
+  "detectedEmotions": ["Fatigue", "Relief"],
+  "mainTriggers": ["End of week tasks"],
   "insights": ["You recover quickly when you give yourself moments of rest", "Describing feelings reduces intensity"],
   "recommendations": ["Schedule breaks every 90 minutes", "End day with grounding ritual"]
 }', NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day');
@@ -371,8 +371,8 @@ INSERT INTO ai_reports (user_id, entry_id, report_type, report_date, content, cr
 VALUES
 (2, 16, 'daily', CURRENT_DATE,
 '{
-  "detected_emotions": ["Calm", "Relief"],
-  "main_triggers": ["Completed task"],
+  "detectedEmotions": ["Calm", "Relief"],
+  "mainTriggers": ["Completed task"],
   "insights": ["Small wins boost confidence", "Reflecting on progress improves mood"],
   "recommendations": ["Celebrate small achievements", "Take note of positive emotions"]
 }', NOW(), NOW());
