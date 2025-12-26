@@ -18,25 +18,27 @@ export const DiaryFromQuestionPage = () => {
         const entry = await getEntryByDate(userId, entryDate);
 
         if (entry) {
-          navigate("/diary/edit", {
+          navigate(`/diary/edit?questionId=${questionId}`, {
             state: { entryDate },
             replace: true,
           });
         } else {
           navigate(`/diary/new?questionId=${questionId}`, {
+            state: { entryDate },
             replace: true,
           });
         }
       } catch (error) {
         console.error(error);
         navigate(`/diary/new?questionId=${questionId}`, {
+          state: { entryDate },
           replace: true,
         });
       }
     };
 
     resolve();
-  }, [questionId]);
+  }, [questionId, entryDate, navigate, userId]);
 
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>

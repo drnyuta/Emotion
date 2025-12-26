@@ -90,7 +90,7 @@ export const EntryForm = ({
               Hint: use{" "}
               <span className="highlight" onClick={onPickQuestion}>
                 Question of the day
-              </span>
+              </span>{" "}
               to inspire your journaling.
             </p>
           </div>

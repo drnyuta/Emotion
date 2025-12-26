@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Breadcrumb, Modal } from "antd";
 import { EntryForm } from "../../components/EntryForm/EntryForm";
 import { getCategoriesWithEmotions } from "../../api/emotions";
@@ -21,6 +21,7 @@ import { Button } from "../../components/Button/Button";
 export const EditEntryPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const [content, setContent] = useState("");
   const [questionText, setQuestionText] = useState<string | null>(null);
@@ -36,6 +37,7 @@ export const EditEntryPage = () => {
 
   const entryDate = location.state?.entryDate ?? dayjs().format("YYYY-MM-DD");
   const formattedDate = dayjs(entryDate).format("MMMM D, YYYY");
+  const newQuestionId = searchParams.get("questionId");
 
   const loadCategories = async () => {
     try {
@@ -80,15 +82,6 @@ export const EditEntryPage = () => {
         setSelectedEmotions(mapped);
       }
 
-      if (entry.question_id) {
-        try {
-          const question = await getQuestionById(entry.question_id);
-          setQuestionText(question.question_text);
-        } catch (err) {
-          console.error("Failed to load question:", err);
-        }
-      }
-
       setError(null);
     } catch (err) {
       console.error("Failed to load entry:", err);
@@ -117,6 +110,30 @@ export const EditEntryPage = () => {
     loadData();
   }, [userId, entryDate]);
 
+  useEffect(() => {
+    const loadQuestion = async () => {
+      const questionIdToLoad = newQuestionId 
+        ? Number(newQuestionId) 
+        : entryData?.question_id;
+
+      if (questionIdToLoad) {
+        try {
+          const question = await getQuestionById(questionIdToLoad);
+          setQuestionText(question.question_text);
+        } catch (err) {
+          console.error("Failed to load question:", err);
+          setQuestionText(null);
+        }
+      } else {
+        setQuestionText(null);
+      }
+    };
+
+    if (entryData) {
+      loadQuestion();
+    }
+  }, [newQuestionId, entryData]);
+
   const handleSave = async () => {
     if (!entryData?.id) {
       setError("Entry ID is missing");
@@ -126,11 +143,16 @@ export const EditEntryPage = () => {
     try {
       setLoading(true);
       const emotionIds = selectedEmotions.map((e) => e.emotionId);
+  
+      const questionIdToSave = newQuestionId 
+        ? Number(newQuestionId) 
+        : entryData?.question_id;
+
       await updateEntry(
         entryData.id,
         userId,
         content,
-        entryData?.question_id,
+        questionIdToSave,
         emotionIds
       );
       navigate("/diary");
@@ -207,7 +229,7 @@ export const EditEntryPage = () => {
             navigate("/questions", {
               state: {
                 from: "/diary/edit",
-                entryDate
+                entryDate,
               },
             })
           }
