@@ -5,6 +5,7 @@ import EmotionSelector from "../EmotionSelector/EmotionSelector";
 import { DiaryEmotion, CategoryWithEmotions } from "../../globalInterfaces";
 import { getCategoryEnum } from "../../utils/getCategoryEnum";
 import Emoji from "../../assets/icons/happy-face.svg";
+import Cross from "../../assets/icons/cross.svg";
 import "./EntryForm.scss";
 
 const { TextArea } = Input;
@@ -22,6 +23,7 @@ interface EntryFormProps {
   onSave: () => void;
   onCancel: () => void;
   onPickQuestion: () => void;
+  onDeleteQuestion?: () => void;
 }
 
 export const EntryForm = ({
@@ -37,6 +39,7 @@ export const EntryForm = ({
   onSave,
   onCancel,
   onPickQuestion,
+  onDeleteQuestion,
 }: EntryFormProps) => {
   const handleEmotionAdd = (
     id: number,
@@ -72,6 +75,14 @@ export const EntryForm = ({
           {questionText && (
             <div className="entry-form__question">
               <p className="entry-form__question-text">{questionText}</p>
+
+              <button
+                className="entry-form__question-delete"
+                onClick={onDeleteQuestion}
+                aria-label="Delete question"
+              >
+                <img src={Cross} alt="cross" className="entry-form__question-delete-icon"/>
+              </button>
             </div>
           )}
 

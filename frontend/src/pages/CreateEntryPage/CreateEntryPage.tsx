@@ -18,6 +18,7 @@ export const CreateEntryPage = () => {
 
   const [content, setContent] = useState("");
   const [questionText, setQuestionText] = useState<string | null>(null);
+  const [questionId, setQuestionId] = useState<number | null>(null);
   const [selectedEmotions, setSelectedEmotions] = useState<DiaryEmotion[]>([]);
   const [categories, setCategories] = useState<CategoryWithEmotions[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,7 @@ export const CreateEntryPage = () => {
 
   const entryDate = location.state?.entryDate ?? dayjs().format("YYYY-MM-DD");
   const formattedDate = dayjs(entryDate).format("MMMM D, YYYY");
-  const questionId = searchParams.get("questionId");
+  const questionIdFromUrl = searchParams.get("questionId");
 
   const userId = 1;
 
@@ -56,13 +57,18 @@ export const CreateEntryPage = () => {
 
   useEffect(() => {
     const loadQuestion = async () => {
-      if (questionId) {
-        try {
-          const question = await getQuestionById(Number(questionId));
-          setQuestionText(question.question_text);
-        } catch (err) {
-          console.error("Failed to load question:", err);
-        }
+      if (!questionIdFromUrl) {
+        setQuestionId(null);
+        setQuestionText(null);
+        return;
+      }
+      const id = Number(questionIdFromUrl);
+      setQuestionId(id);
+      try {
+        const question = await getQuestionById(Number(questionId));
+        setQuestionText(question.question_text);
+      } catch (err) {
+        console.error("Failed to load question:", err);
       }
     };
 
@@ -77,7 +83,7 @@ export const CreateEntryPage = () => {
         userId,
         entryDate,
         content,
-        questionId ? Number(questionId) : undefined,
+        questionId ?? undefined,
         emotionIds
       );
       navigate("/diary");
@@ -99,6 +105,11 @@ export const CreateEntryPage = () => {
         navigate("/diary");
       },
     });
+  };
+
+  const handleDeleteQuestion = () => {
+    setQuestionText(null);
+    setQuestionId(null);
   };
 
   if (loading) {
@@ -143,6 +154,7 @@ export const CreateEntryPage = () => {
               },
             })
           }
+          onDeleteQuestion={handleDeleteQuestion}
         />
       </div>
     </div>

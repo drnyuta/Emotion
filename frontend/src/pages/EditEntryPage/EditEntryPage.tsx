@@ -32,6 +32,7 @@ export const EditEntryPage = () => {
   const [emotionError, setEmotionError] = useState<string | null>(null);
   const [initialLoading, setInitialLoading] = useState(true);
   const [entryData, setEntryData] = useState<Entry | null>(null);
+  const [questionId, setQuestionId] = useState<number | null>(null);
 
   const userId = 1;
 
@@ -95,12 +96,7 @@ export const EditEntryPage = () => {
       try {
         setInitialLoading(true);
         setLoading(true);
-
         await Promise.all([loadCategories(), loadEntry()]);
-      } catch (err) {
-        console.error("Failed to load data:", err);
-        setError("Failed to load entry data");
-        setCategories([]);
       } finally {
         setInitialLoading(false);
         setLoading(false);
@@ -112,16 +108,17 @@ export const EditEntryPage = () => {
 
   useEffect(() => {
     const loadQuestion = async () => {
-      const questionIdToLoad = newQuestionId 
-        ? Number(newQuestionId) 
-        : entryData?.question_id;
+      const id = newQuestionId
+        ? Number(newQuestionId)
+        : entryData?.question_id ?? null;
 
-      if (questionIdToLoad) {
+      setQuestionId(id);
+
+      if (id) {
         try {
-          const question = await getQuestionById(questionIdToLoad);
+          const question = await getQuestionById(id);
           setQuestionText(question.question_text);
-        } catch (err) {
-          console.error("Failed to load question:", err);
+        } catch {
           setQuestionText(null);
         }
       } else {
@@ -142,19 +139,11 @@ export const EditEntryPage = () => {
 
     try {
       setLoading(true);
-      const emotionIds = selectedEmotions.map((e) => e.emotionId);
-  
-      const questionIdToSave = newQuestionId 
-        ? Number(newQuestionId) 
-        : entryData?.question_id;
 
-      await updateEntry(
-        entryData.id,
-        userId,
-        content,
-        questionIdToSave,
-        emotionIds
-      );
+      const emotionIds = selectedEmotions.map((e) => e.emotionId);
+
+      await updateEntry(entryData.id, userId, content, questionId, emotionIds);
+
       navigate("/diary");
     } catch (err) {
       console.error(err);
@@ -174,6 +163,11 @@ export const EditEntryPage = () => {
         navigate("/diary");
       },
     });
+  };
+
+  const handleDeleteQuestion = () => {
+    setQuestionText(null);
+    setQuestionId(null);
   };
 
   if (initialLoading || loading) {
@@ -233,6 +227,7 @@ export const EditEntryPage = () => {
               },
             })
           }
+          onDeleteQuestion={handleDeleteQuestion}
         />
       </div>
     </div>

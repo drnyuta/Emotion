@@ -87,6 +87,7 @@
       font-weight: 700;
       text-decoration: none;
       font-size: inherit;
+      cursor: pointer;
 
       &:hover {
         text-decoration: underline;
@@ -161,6 +162,7 @@
     .highlight {
       color: var(--color-purple);
       font-weight: 700;
+      cursor: pointer;
 
       &:hover {
         text-decoration: underline;
@@ -201,6 +203,34 @@
 
     @include breakpoints.mobile {
       font-size: 14px;
+    }
+  }
+
+  &__question {
+    position: relative;
+
+    &-delete {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: none;
+      background: #D9D9D9;;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: #9c9c9c;
+      }
+
+      &-icon {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 }
