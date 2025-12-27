@@ -5,8 +5,7 @@ export type ButtonSize = "small" | "large";
 export type ButtonVariant =
   | "primary"
   | "secondary"
-  | "danger"
-  | "ghost"
+  | "blue"
   | "custom";
 
 interface ButtonProps {

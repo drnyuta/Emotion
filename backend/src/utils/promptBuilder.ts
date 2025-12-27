@@ -102,7 +102,10 @@ OUTPUT FORMAT:
 Return ONLY a valid JSON object with the following structure:
 {
   "dominantEmotion": "string",
-  "mainTrigger": "string",
+  "mainTriggers": [
+    {"title": "string", "description": "string"},
+    ...
+  ],
   "overview": "string",
   "recurringPatterns": [
     {"title": "string", "description": "string"},

@@ -21,8 +21,8 @@
   }
 
   &--large {
-    padding: 12px 32px;
-    font-size: 16px;
+    padding: 16px 68px;
+    font-size: 24px;
   }
 
   &--full-width {
@@ -49,21 +49,12 @@
     }
   }
 
-  &--danger {
-    background: #1f2937;
+  &--blue {
+    background: var(--color-dark-blue);
     color: #ffffff;
 
     &:hover:not(:disabled) {
       background: #111827;
-    }
-  }
-
-  &--ghost {
-    background: transparent;
-    color: #7c3aed;
-
-    &:hover:not(:disabled) {
-      background: #f3e8ff;
     }
   }
 

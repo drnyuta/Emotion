@@ -1,0 +1,71 @@
+.report-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 600px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__icon {
+    display: block;
+    height: 40px;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__delete {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+
+  &__field {
+    margin-bottom: 12px;
+    display: flex;
+    gap: 16px;
+
+    strong {
+      color: var(--color-dark-blue);
+      font-size: 20px;
+      white-space: nowrap; 
+      flex-shrink: 0; 
+    }
+  }
+
+  &__value {
+    color: var(--color-purple);
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  &__text {
+    color: var(--color-dark-blue);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  &__button {
+    align-self: flex-end;
+  }
+}

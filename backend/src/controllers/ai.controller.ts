@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { AIService } from "../services/ai.service";
-import { SortOption } from "../types";
 
 export class AIController {
   static async chat(req: Request, res: Response) {
@@ -19,13 +18,13 @@ export class AIController {
   static async dailyReport(req: Request, res: Response) {
     try {
       const { entryText, selectedEmotions, entryId } = req.body;
-      const result = await AIService.dailyAnalysis(
+      const report = await AIService.dailyAnalysis(
         entryText,
         selectedEmotions,
         1,
         entryId
       );
-      res.json({ success: true, result });
+      res.json({ success: true, report });
     } catch (err: any) {
       res.status(400).json({ success: false, error: err.message });
     }
@@ -34,8 +33,8 @@ export class AIController {
   static async weeklyReport(req: Request, res: Response) {
     try {
       const { entries } = req.body;
-      const result = await AIService.weeklyAnalysis(entries, 1);
-      res.json({ success: true, result });
+      const report = await AIService.weeklyAnalysis(entries, 1);
+      res.json({ success: true, report });
     } catch (err: any) {
       res.status(400).json({ success: false, error: err.message });
     }
@@ -44,7 +43,7 @@ export class AIController {
   static async getAllReports(req: Request, res: Response) {
     try {
       const userId = 1;
-      const { type, sort } = req.query;
+      const { type, sort, year, month } = req.query;
 
       if (!userId) {
         throw new Error("userId is required");
@@ -52,7 +51,9 @@ export class AIController {
 
       const reports = await AIService.getAllReports(userId, {
         type: type as "daily" | "weekly",
-        sort: sort as SortOption,
+        sort: sort as "newest" | "oldest",
+        year: year ? parseInt(year as string) : undefined,
+        month: month ? parseInt(month as string) : undefined,
       });
 
       res.json({
