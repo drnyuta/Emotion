@@ -2,7 +2,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { logger } from "../logger";
 
 import {
-  buildChatPrompt,
   buildDailyPrompt,
   buildLimitedWeeklyPrompt,
   buildWeeklyPrompt,
@@ -22,7 +21,7 @@ import { containsInappropriateContent } from "../utils/containsInappropriateCont
 import { SYSTEM_PROMPT } from "../constants/system.prompt";
 import { CRISIS_RESPONSE } from "../constants/crisis.response";
 
-import { SortOption, WeeklyEntry } from "../types";
+import { WeeklyEntry } from "../types";
 import { cleanAIJson } from "../utils/cleanAiJson";
 import { handleAIError } from "../utils/aiErrorHandler";
 import { ValidationError } from "../errors/validation.error";
@@ -108,7 +107,7 @@ export class AIService {
     selectedEmotions: string[] = [],
     userId: number,
     entryId: number
-  ): Promise<string> {
+  ): Promise<any> {
     logger.info({
       type: "DAILY_ANALYSIS_REQUEST",
       textLength: entryText?.length,
@@ -143,6 +142,25 @@ export class AIService {
     if (isGibberish(entryText))
       throw new ValidationError("Entry contains unreadable characters.");
 
+    const reportDate = new Date().toLocaleDateString("en-CA");
+
+    const existingReport = await AIReportsRepository.findDailyReportByDate(
+      userId,
+      reportDate
+    );
+
+    if (existingReport) {
+      logger.warn({
+        type: "DUPLICATE_DAILY_REPORT",
+        userId,
+        reportDate,
+        existingReportId: existingReport.id,
+      });
+      throw new ValidationError(
+        "A daily report for this date already exists. Please delete the existing report first."
+      );
+    }
+
     const prompt = buildDailyPrompt(entryText, validEmotions);
 
     try {
@@ -153,15 +171,15 @@ export class AIService {
         responsePreview: String(JSON.stringify(cleaned)).slice(0, 100),
       });
 
-      await this.saveReport({
+      const savedReport = await this.saveReport({
         userId,
         entryId,
         reportType: "daily",
-        reportDate: new Date().toLocaleDateString("en-CA"),
+        reportDate,
         content: cleaned,
       });
 
-      return cleaned;
+      return mapAIReportToDTO(savedReport);
     } catch (error: any) {
       logger.error({
         type: "DAILY_ANALYSIS_ERROR",
@@ -175,7 +193,7 @@ export class AIService {
   static async weeklyAnalysis(
     entries: WeeklyEntry[],
     userId: number
-  ): Promise<string> {
+  ): Promise<any> {
     logger.info({
       type: "WEEKLY_ANALYSIS_REQUEST",
       entriesCount: entries?.length,
@@ -218,6 +236,26 @@ export class AIService {
     const reportStartDate = validEntries[0].date;
     const reportEndDate = validEntries[validEntries.length - 1].date;
 
+    const existingReport =
+      await AIReportsRepository.findWeeklyReportByDateRange(
+        userId,
+        reportStartDate,
+        reportEndDate
+      );
+
+    if (existingReport) {
+      logger.warn({
+        type: "DUPLICATE_WEEKLY_REPORT",
+        userId,
+        reportStartDate,
+        reportEndDate,
+        existingReportId: existingReport.id,
+      });
+      throw new ValidationError(
+        `A weekly report for ${reportStartDate} to ${reportEndDate} already exists. Please delete the existing report first.`
+      );
+    }
+
     if (validEntries.length < MIN_WEEKLY_ENTRIES) {
       return this.generateLimitedWeeklyReport(
         validEntries,
@@ -238,7 +276,7 @@ export class AIService {
         length: cleaned.length,
       });
 
-      await this.saveReport({
+      const savedReport = await this.saveReport({
         userId,
         reportType: "weekly",
         reportDate: reportStartDate,
@@ -246,7 +284,7 @@ export class AIService {
         content: cleaned,
       });
 
-      return cleaned;
+      return mapAIReportToDTO(savedReport);
     } catch (error: any) {
       logger.error({
         type: "WEEKLY_ANALYSIS_ERROR",
@@ -262,11 +300,31 @@ export class AIService {
     userId: number,
     reportStartDate: string,
     reportEndDate: string
-  ): Promise<string> {
+  ): Promise<any> {
     logger.info({
       type: "LIMITED_WEEKLY_REPORT_REQUEST",
       entriesCount: entries.length,
     });
+
+    const existingReport =
+      await AIReportsRepository.findWeeklyReportByDateRange(
+        userId,
+        reportStartDate,
+        reportEndDate
+      );
+
+    if (existingReport) {
+      logger.warn({
+        type: "DUPLICATE_LIMITED_WEEKLY_REPORT",
+        userId,
+        reportStartDate,
+        reportEndDate,
+        existingReportId: existingReport.id,
+      });
+      throw new ValidationError(
+        `A weekly report for ${reportStartDate} to ${reportEndDate} already exists. Please delete the existing report first.`
+      );
+    }
 
     const prompt = buildLimitedWeeklyPrompt(entries);
 
@@ -279,7 +337,7 @@ export class AIService {
         responsePreview: String(JSON.stringify(cleaned)).slice(0, 100),
       });
 
-      await this.saveReport({
+      const savedReport = await this.saveReport({
         userId,
         reportType: "weekly",
         reportDate: reportStartDate,
@@ -287,7 +345,7 @@ export class AIService {
         content: cleaned,
       });
 
-      return cleaned;
+      return mapAIReportToDTO(savedReport);
     } catch (error: any) {
       logger.error({
         type: "LIMITED_WEEKLY_REPORT_ERROR",
@@ -302,7 +360,9 @@ export class AIService {
     userId: number,
     options?: {
       type?: "daily" | "weekly";
-      sort?: SortOption;
+      sort?: "newest" | "oldest";
+      year?: number;
+      month?: number;
     }
   ) {
     const reports = await AIReportsRepository.findAllByUserId(userId);
@@ -317,20 +377,27 @@ export class AIService {
       filtered = filtered.filter((r) => r.report_type === "weekly");
     }
 
-    if (options?.sort === "lastMonth") {
-      const from = new Date();
-      from.setMonth(from.getMonth() - 1);
+    if (options?.year) {
+      filtered = filtered.filter((r) => {
+        const reportDate = new Date(r.report_date + "T00:00:00");
+        return reportDate.getFullYear() === options.year;
+      });
+    }
 
-      filtered = filtered.filter((r) => new Date(r.report_date) >= from);
+    if (options?.month && options?.year) {
+      filtered = filtered.filter((r) => {
+        const reportDate = new Date(r.report_date + "T00:00:00");
+        return reportDate.getMonth() === options.month! - 1;
+      });
     }
 
     if (options?.sort === "oldest") {
       filtered.sort(
-        (a, b) => +new Date(a.created_at) - +new Date(b.created_at)
+        (a, b) => +new Date(a.report_date) - +new Date(b.report_date)
       );
     } else {
       filtered.sort(
-        (a, b) => +new Date(b.created_at) - +new Date(a.created_at)
+        (a, b) => +new Date(b.report_date) - +new Date(a.report_date)
       );
     }
 

@@ -48,4 +48,60 @@ export class AIReportsRepository {
 
     return (result.rowCount ?? 0) > 0;
   }
+
+  static async findDailyReportByDate(
+    userId: number,
+    reportDate: string
+  ): Promise<AIReportRow | null> {
+    const result = await client.query(
+      `
+      SELECT
+        id,
+        user_id,
+        entry_id,
+        report_type,
+        report_date::text as report_date,
+        report_end_date::text as report_end_date,
+        content,
+        created_at
+      FROM ai_reports
+      WHERE user_id = $1 
+        AND report_type = 'daily'
+        AND report_date = $2
+      LIMIT 1
+      `,
+      [userId, reportDate]
+    );
+
+    return result.rows[0] || null;
+  }
+
+  static async findWeeklyReportByDateRange(
+    userId: number,
+    reportStartDate: string,
+    reportEndDate: string
+  ): Promise<AIReportRow | null> {
+    const result = await client.query(
+      `
+      SELECT
+        id,
+        user_id,
+        entry_id,
+        report_type,
+        report_date::text as report_date,
+        report_end_date::text as report_end_date,
+        content,
+        created_at
+      FROM ai_reports
+      WHERE user_id = $1 
+        AND report_type = 'weekly'
+        AND report_date = $2
+        AND report_end_date = $3
+      LIMIT 1
+      `,
+      [userId, reportStartDate, reportEndDate]
+    );
+
+    return result.rows[0] || null;
+  }
 }

@@ -46,3 +46,10 @@ export interface Question {
   id: number;
   question_text: string;
 }
+export interface Report {
+  id: number;
+  type: "daily" | "weekly" | "weekly_limited";
+  reportDate: string;
+  reportEndDate: string | null;
+  data: unknown;
+}

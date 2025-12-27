@@ -9,6 +9,8 @@ import "./DiaryPage.scss";
 import { mapDiaryEmotion } from "../../utils/mapDiaryEmotion";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "antd";
+import { generateDailyReport } from "../../api/aiApi";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 export const DiaryPage = () => {
   const userId = 1;
@@ -94,9 +96,8 @@ export const DiaryPage = () => {
       setDatesWithEntries((prev) =>
         prev.filter((d) => d !== selectedDate.format("YYYY-MM-DD"))
       );
-    } catch (err) {
-      console.error(err);
-      setError("Failed to delete entry");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to delete entry"));
     } finally {
       setLoading(false);
     }
@@ -118,8 +119,21 @@ export const DiaryPage = () => {
     });
   };
 
-  const handleAnalyse = (id: number) => {
-    console.log("Analyse entry with AI:", id);
+  const handleAnalyse = async (entryId: number) => {
+    setLoading(true);
+    try {
+      const generatedReport = await generateDailyReport({
+        entryText: entry?.content || "",
+        selectedEmotions: entry?.emotions.map((e) => e.emotion) || [],
+        entryId,
+      });
+
+      navigate(`/reports/${generatedReport.id}`);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to generate report"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleViewMore = (id: number) => {

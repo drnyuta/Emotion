@@ -1,0 +1,60 @@
+@import '../../styles/variables/breakpoints';
+
+.reports-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+
+  @include mobile {
+    gap: 20px;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 40px;
+  }
+
+  &__filters-item {
+    display: flex;
+    align-items: center;
+    gap: 10px
+  }
+
+  &__select {
+    width: fit-content;
+    min-width: 100px;
+    height: 40px;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+
+  &__error {
+    color: var(--color-red);
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__empty-icon {
+    display: block;
+    width: 100px;
+    height: 100px;
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

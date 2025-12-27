@@ -10,6 +10,8 @@ import { EmotionWheelPage } from "./pages/EmotionWheelPage/EmotionWheelPage";
 import { EmotionAccordeonPage } from "./pages/EmotionAccordeonPage/EmotionAccordeonPage";
 import { QuestionsPage } from "./pages/QuestionsPage/QuestionsPage";
 import { DiaryFromQuestionPage } from "./pages/DiaryFromQuestionPage/DiaryFromQuestionPage";
+import { AiReportsPage } from "./pages/AiReportsPage/AiReportsPage";
+import { ReportDetailPage } from "./pages/ReportDetailPage/ReportDetailPage";
 
 export const App: React.FC = () => {
   return (
@@ -35,6 +37,11 @@ export const App: React.FC = () => {
                   <Route path="questions" element={<QuestionsPage />} />
                   <Route path="/diary/from-question" element={<DiaryFromQuestionPage />} />
                   <Route path="smart-chat" element={<SmartChatPage />} />
+                  <Route path="reports" element={<AiReportsPage />} />
+                  <Route
+                    path="/reports/:id"
+                    element={<ReportDetailPage />}
+                  />
                 </Routes>
               </Layout>
             }

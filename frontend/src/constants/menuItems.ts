@@ -13,7 +13,7 @@ export interface MenuItem {
   path: string;
 }
 
-export const menuItems: MenuItem[] = [
+export const MENU_ITEMS: MenuItem[] = [
   { label: "Diary", icon: DiaryIcon, path: "/diary" },
   { label: "Question Of The Day", icon: QuestionIcon, path: "/questions" },
   { label: "Emotion Wheel", icon: HappyFaceIcon, path: "/emotion-wheel" },
