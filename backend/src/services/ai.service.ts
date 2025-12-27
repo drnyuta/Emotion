@@ -22,10 +22,13 @@ import { containsInappropriateContent } from "../utils/containsInappropriateCont
 import { SYSTEM_PROMPT } from "../constants/system.prompt";
 import { CRISIS_RESPONSE } from "../constants/crisis.response";
 
-import { WeeklyEntry } from "../types";
+import { SortOption, WeeklyEntry } from "../types";
 import { cleanAIJson } from "../utils/cleanAiJson";
 import { handleAIError } from "../utils/aiErrorHandler";
 import { ValidationError } from "../errors/validation.error";
+import { AIReportsRepository } from "../repositories/aiReports.repository";
+import { mapAIReportToDTO } from "../utils/aiReportMapper";
+import { client } from "../database";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const chatHistory: Record<string, any[]> = {};
@@ -102,7 +105,9 @@ export class AIService {
 
   static async dailyAnalysis(
     entryText: string,
-    selectedEmotions: string[] = []
+    selectedEmotions: string[] = [],
+    userId: number,
+    entryId: number
   ): Promise<string> {
     logger.info({
       type: "DAILY_ANALYSIS_REQUEST",
@@ -148,6 +153,14 @@ export class AIService {
         responsePreview: String(JSON.stringify(cleaned)).slice(0, 100),
       });
 
+      await this.saveReport({
+        userId,
+        entryId,
+        reportType: "daily",
+        reportDate: new Date().toLocaleDateString("en-CA"),
+        content: cleaned,
+      });
+
       return cleaned;
     } catch (error: any) {
       logger.error({
@@ -159,7 +172,10 @@ export class AIService {
     }
   }
 
-  static async weeklyAnalysis(entries: WeeklyEntry[]): Promise<string> {
+  static async weeklyAnalysis(
+    entries: WeeklyEntry[],
+    userId: number
+  ): Promise<string> {
     logger.info({
       type: "WEEKLY_ANALYSIS_REQUEST",
       entriesCount: entries?.length,
@@ -199,8 +215,16 @@ export class AIService {
 
     const validEntries = entries.filter((e) => e.text.trim().length);
 
+    const reportStartDate = validEntries[0].date;
+    const reportEndDate = validEntries[validEntries.length - 1].date;
+
     if (validEntries.length < MIN_WEEKLY_ENTRIES) {
-      return this.generateLimitedWeeklyReport(validEntries);
+      return this.generateLimitedWeeklyReport(
+        validEntries,
+        userId,
+        reportStartDate,
+        reportEndDate
+      );
     }
 
     const prompt = buildWeeklyPrompt(validEntries);
@@ -212,6 +236,14 @@ export class AIService {
       logger.info({
         type: "WEEKLY_ANALYSIS_RESPONSE",
         length: cleaned.length,
+      });
+
+      await this.saveReport({
+        userId,
+        reportType: "weekly",
+        reportDate: reportStartDate,
+        reportEndDate: reportEndDate,
+        content: cleaned,
       });
 
       return cleaned;
@@ -226,7 +258,10 @@ export class AIService {
   }
 
   private static async generateLimitedWeeklyReport(
-    entries: WeeklyEntry[]
+    entries: WeeklyEntry[],
+    userId: number,
+    reportStartDate: string,
+    reportEndDate: string
   ): Promise<string> {
     logger.info({
       type: "LIMITED_WEEKLY_REPORT_REQUEST",
@@ -244,6 +279,14 @@ export class AIService {
         responsePreview: String(JSON.stringify(cleaned)).slice(0, 100),
       });
 
+      await this.saveReport({
+        userId,
+        reportType: "weekly",
+        reportDate: reportStartDate,
+        reportEndDate: reportEndDate,
+        content: cleaned,
+      });
+
       return cleaned;
     } catch (error: any) {
       logger.error({
@@ -253,5 +296,107 @@ export class AIService {
       });
       handleAIError(error);
     }
+  }
+
+  static async getAllReports(
+    userId: number,
+    options?: {
+      type?: "daily" | "weekly";
+      sort?: SortOption;
+    }
+  ) {
+    const reports = await AIReportsRepository.findAllByUserId(userId);
+
+    let filtered = reports;
+
+    if (options?.type === "daily") {
+      filtered = filtered.filter((r) => r.report_type === "daily");
+    }
+
+    if (options?.type === "weekly") {
+      filtered = filtered.filter((r) => r.report_type === "weekly");
+    }
+
+    if (options?.sort === "lastMonth") {
+      const from = new Date();
+      from.setMonth(from.getMonth() - 1);
+
+      filtered = filtered.filter((r) => new Date(r.report_date) >= from);
+    }
+
+    if (options?.sort === "oldest") {
+      filtered.sort(
+        (a, b) => +new Date(a.created_at) - +new Date(b.created_at)
+      );
+    } else {
+      filtered.sort(
+        (a, b) => +new Date(b.created_at) - +new Date(a.created_at)
+      );
+    }
+
+    return filtered.map(mapAIReportToDTO);
+  }
+
+  static async saveReport(params: {
+    userId: number;
+    entryId?: number | null;
+    reportType: "daily" | "weekly";
+    reportDate: string;
+    reportEndDate?: string | null;
+    content: any;
+  }) {
+    const {
+      userId,
+      entryId = null,
+      reportType,
+      reportDate,
+      reportEndDate = null,
+      content,
+    } = params;
+
+    const query = `
+      INSERT INTO ai_reports
+        (user_id, entry_id, report_type, report_date, report_end_date, content, created_at, updated_at)
+      VALUES
+        ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      RETURNING *;
+    `;
+
+    const values = [
+      userId,
+      entryId,
+      reportType,
+      reportDate,
+      reportEndDate,
+      content,
+    ];
+
+    const result = await client.query(query, values);
+
+    return result.rows[0];
+  }
+
+  static async deleteReport(reportId: number, userId: number): Promise<void> {
+    logger.info({
+      type: "DELETE_REPORT_REQUEST",
+      reportId,
+      userId,
+    });
+
+    if (!reportId) {
+      throw new ValidationError("Report ID is required.");
+    }
+
+    const deleted = await AIReportsRepository.deleteReport(reportId, userId);
+
+    if (!deleted) {
+      throw new ValidationError("Report not found or already deleted.");
+    }
+
+    logger.info({
+      type: "DELETE_REPORT_SUCCESS",
+      reportId,
+      userId,
+    });
   }
 }
