@@ -7,6 +7,7 @@ import aiRoutes from "./routes/ai.routes";
 import diaryRoutes from "./routes/diary";
 import emotionRoutes from "./routes/emotion"
 import questionRoutes from "./routes/question"
+import insightRoutes from "./routes/insights"
 import { errorLogger } from "./middleware/errorLogger";
 import { requestLogger } from "./middleware/requestLogger";
 
@@ -21,6 +22,7 @@ app.use("/ai", aiRoutes);
 app.use('/diary', diaryRoutes);
 app.use('/emotions', emotionRoutes)
 app.use('/questions', questionRoutes)
+app.use('/insights', insightRoutes)
 
 const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
