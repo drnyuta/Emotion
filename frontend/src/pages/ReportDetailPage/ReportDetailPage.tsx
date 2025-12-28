@@ -200,7 +200,7 @@ export const ReportDetailPage = () => {
     <div className="report-detail-page">
       <Breadcrumb
         items={[
-          { title: "All reports", href: "/ai-reports" },
+          { title: "All reports", href: "/reports" },
           { title: `Report #${id}` },
         ]}
         className="report-detail-page__breadcrumb"

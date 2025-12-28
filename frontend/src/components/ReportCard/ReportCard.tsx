@@ -1,4 +1,4 @@
-import { Popconfirm } from "antd";
+
 import { Report } from "../../globalInterfaces";
 import "./ReportCard.scss";
 import BinIcon from "../../assets/icons/red-bin.svg";
@@ -20,7 +20,6 @@ export const ReportCard = ({
   onViewMore,
   onDelete,
 }: ReportCardProps) => {
-  
   const fields = getPreviewCardFields(report);
 
   return (
@@ -32,17 +31,13 @@ export const ReportCard = ({
         </div>
         <div className="report-card__meta">
           <p className="report-card__type">{getReportTypeLabel(report)}</p>
-          <Popconfirm
-            title="Delete report"
-            description="Are you sure you want to delete this report?"
-            onConfirm={() => onDelete(report.id)}
-            okText="Yes"
-            cancelText="No"
+
+          <button
+            className="report-card__delete"
+            onClick={() => onDelete(report.id)}
           >
-            <button className="report-card__delete">
-              <img src={BinIcon} alt="delete icon" />
-            </button>
-          </Popconfirm>
+            <img src={BinIcon} alt="delete icon" />
+          </button>
         </div>
       </div>
 

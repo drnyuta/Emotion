@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { Select, message } from "antd";
+import { Modal, Select, message } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ToggleButton } from "../../components/ToggleButton/ToggleButton";
 import { ReportCard } from "../../components/ReportCard/ReportCard";
@@ -72,15 +72,26 @@ export const AiReportsPage = () => {
     navigate(`/reports/${reportId}`);
   };
 
-  const handleDelete = async (reportId: number) => {
-    try {
-      await deleteReport(reportId);
-      setReports(reports.filter((r) => r.id !== reportId));
-      message.success("Report deleted successfully");
-    } catch (error) {
-      console.error("Failed to delete report:", error);
-      message.error("Failed to delete report");
-    }
+ const handleDelete = (reportId: number) => {
+    Modal.confirm({
+      title: "Delete report",
+      content: "Are you sure you want to delete this report?",
+      okText: "Delete",
+      cancelText: "Cancel",
+      okButtonProps: {
+        type: "primary",
+      },
+      onOk: async () => {
+        try {
+          await deleteReport(reportId);
+          setReports((prev) => prev.filter((r) => r.id !== reportId));
+          message.success("Report deleted successfully");
+        } catch (error) {
+          console.error("Failed to delete report:", error);
+          message.error("Failed to delete report");
+        }
+      },
+    });
   };
 
   return (
@@ -95,7 +106,7 @@ export const AiReportsPage = () => {
             onChange={setPeriod}
           />
         </div>
-        <div className="reports-page__filters-item">
+         <div className="reports-page__filters-item">
           <h3>Sort:</h3>
           <Select
             value={sortBy}
