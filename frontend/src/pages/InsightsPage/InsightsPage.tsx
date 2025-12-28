@@ -19,7 +19,7 @@ export const InsightsPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const userId = 1; 
+  const userId = 1;
 
   useEffect(() => {
     fetchInsights();
@@ -89,17 +89,28 @@ export const InsightsPage = () => {
           <a href="/reports">reports</a> and save meaningful ideas. Or add them
           right here
         </p>
+        <div className="insights-page__add">
+          {showCreateForm && (
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                marginBottom: 0,
+                zIndex: 10
+              }}
+            >
+              <SaveInsightModal
+                onSave={handleCreate}
+                onCancel={() => setShowCreateForm(false)}
+                saving={saving}
+              />
+            </div>
+          )}
 
-        <AddInsightButton onClick={() => setShowCreateForm(true)} />
+          <AddInsightButton onClick={() => setShowCreateForm(true)} />
+        </div>
       </div>
-
-      {showCreateForm && (
-        <SaveInsightModal
-          onSave={handleCreate}
-          onCancel={() => setShowCreateForm(false)}
-          saving={saving}
-        />
-      )}
 
       {loading ? (
         <div className="insights-page__loading">

@@ -97,4 +97,23 @@
   &__error {
     color: var(--color-red);
   }
+
+  &__fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    z-index: 100;
+  }
+
+  &__fab-form {
+    position: absolute;
+    bottom: 0; 
+    right: 0;
+    margin-bottom: 0;
+    z-index: 10;
+  }
 }

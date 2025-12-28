@@ -34,6 +34,14 @@
     }
   }
 
+   &__add {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 100;
+  }
+
   &__loading {
     display: flex;
     justify-content: center;

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Breadcrumb } from "antd";
+import { Breadcrumb, message } from "antd";
 import { getAllReports } from "../../api/aiApi";
 import { Report } from "../../globalInterfaces";
 import "./ReportDetailPage.scss";
@@ -13,14 +13,20 @@ import { getReportTypeLabel } from "../../utils/getReportTypeLabel";
 import { RingLoader } from "react-spinners";
 import { Button } from "../../components/Button/Button";
 import Emoji from "../../assets/icons/sad-face.svg";
+import { SaveInsightModal } from "../../components/SaveInsightModal/SaveInsightModal";
+import { AddInsightButton } from "../../components/AddInsightButton/AddInsightButton";
+import { createInsight } from "../../api/insights";
 
 export const ReportDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showInsightForm, setShowInsightForm] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const navigate = useNavigate();
+  const userId = 1;
 
   useEffect(() => {
     fetchReport();
@@ -36,6 +42,21 @@ export const ReportDetailPage = () => {
       setError("Failed to load report");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCreateInsight = async (text: string) => {
+    setSaving(true);
+    try {
+      const insightDate = new Date().toISOString().split("T")[0];
+      await createInsight(userId, text, insightDate);
+      setShowInsightForm(false);
+      message.success("Insight saved successfully");
+    } catch (error) {
+      console.error("Failed to create insight:", error);
+      message.error("Failed to save insight");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -181,7 +202,11 @@ export const ReportDetailPage = () => {
       <div>
         <BackButton />
         <div className="report-detail-page__empty">
-          <img src={Emoji} alt="icon" className="report-detail-page__empty-icon" />
+          <img
+            src={Emoji}
+            alt="icon"
+            className="report-detail-page__empty-icon"
+          />
           <h2>Report is not found</h2>
           <Button
             text="Go back"
@@ -224,6 +249,19 @@ export const ReportDetailPage = () => {
         {report.type === "daily"
           ? renderDailyReport(data)
           : renderWeeklyReport(data, report.type === "weekly_limited")}
+      </div>
+      <div className="report-detail-page__fab">
+        {showInsightForm && (
+          <div className="report-detail-page__fab-form">
+            <SaveInsightModal
+              onSave={handleCreateInsight}
+              onCancel={() => setShowInsightForm(false)}
+              saving={saving}
+            />
+          </div>
+        )}
+
+        <AddInsightButton onClick={() => setShowInsightForm(true)} />
       </div>
     </div>
   );

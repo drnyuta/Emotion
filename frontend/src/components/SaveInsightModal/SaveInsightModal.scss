@@ -10,6 +10,7 @@
   gap: 20px;
   width: fit-content;
   box-sizing: border-box;
+  box-shadow: 0 2px 18px 0 rgba(0, 0, 0, 0.7);
 
   @include breakpoints.mobile {
     gap: 16px;
