@@ -14,6 +14,8 @@ import { AiReportsPage } from "./pages/AiReportsPage/AiReportsPage";
 import { ReportDetailPage } from "./pages/ReportDetailPage/ReportDetailPage";
 import { InsightsPage } from "./pages/InsightsPage/InsightsPage";
 import { AnalyticsPage } from "./pages/AnalyticsPage/AnalyticsPage";
+import { NotFound } from "./pages/NotFound/NotFound";
+import { WelcomePage } from "./pages/WelcomePage/WelcomePage";
 
 export const App: React.FC = () => {
   return (
@@ -26,6 +28,7 @@ export const App: React.FC = () => {
     >
       <Router>
         <Routes>
+          <Route path="/welcome" element={<WelcomePage />} />
           <Route
             path="/*"
             element={
@@ -35,17 +38,21 @@ export const App: React.FC = () => {
                   <Route path="diary/new" element={<CreateEntryPage />} />
                   <Route path="diary/edit" element={<EditEntryPage />} />
                   <Route path="emotion-wheel" element={<EmotionWheelPage />} />
-                  <Route path="emotions/:categoryName" element={<EmotionAccordeonPage />} />
+                  <Route
+                    path="emotions/:categoryName"
+                    element={<EmotionAccordeonPage />}
+                  />
                   <Route path="questions" element={<QuestionsPage />} />
-                  <Route path="/diary/from-question" element={<DiaryFromQuestionPage />} />
+                  <Route
+                    path="diary/from-question"
+                    element={<DiaryFromQuestionPage />}
+                  />
                   <Route path="smart-chat" element={<SmartChatPage />} />
                   <Route path="reports" element={<AiReportsPage />} />
-                  <Route
-                    path="/reports/:id"
-                    element={<ReportDetailPage />}
-                  />
+                  <Route path="reports/:id" element={<ReportDetailPage />} />
                   <Route path="insights" element={<InsightsPage />} />
                   <Route path="analytics" element={<AnalyticsPage />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
             }
