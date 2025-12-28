@@ -53,3 +53,12 @@ export interface Report {
   reportEndDate: string | null;
   data: unknown;
 }
+
+export interface Insight {
+  id: number;
+  userId: number;
+  insightText: string;
+  insightDate: string;
+  createdAt: string;
+  updatedAt: string;
+}

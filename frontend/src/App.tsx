@@ -12,6 +12,7 @@ import { QuestionsPage } from "./pages/QuestionsPage/QuestionsPage";
 import { DiaryFromQuestionPage } from "./pages/DiaryFromQuestionPage/DiaryFromQuestionPage";
 import { AiReportsPage } from "./pages/AiReportsPage/AiReportsPage";
 import { ReportDetailPage } from "./pages/ReportDetailPage/ReportDetailPage";
+import { InsightsPage } from "./pages/InsightsPage/InsightsPage";
 
 export const App: React.FC = () => {
   return (
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
                     path="/reports/:id"
                     element={<ReportDetailPage />}
                   />
+                  <Route path="insights" element={<InsightsPage />} />
                 </Routes>
               </Layout>
             }
