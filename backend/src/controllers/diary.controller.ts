@@ -1,16 +1,20 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import * as DiaryService from "../services/diary.service";
-import { client } from "../database";
+import { AuthRequest } from "../middleware/auth";
 
 export class DiaryController {
-  static async getMonthDates(req: Request, res: Response) {
+  static async getMonthDates(req: AuthRequest, res: Response) {
     try {
-      const userId = Number(req.query.user_id);
+      const userId = req.user!.id; 
       const year = Number(req.query.year);
       const month = Number(req.query.month);
 
-      if (!userId || !year || !month)
-        throw new Error("user_id, year and month are required");
+      if (!year || !month) {
+        return res.status(400).json({
+          success: false,
+          error: "year and month are required",
+        });
+      }
 
       const rows = await DiaryService.getDatesWithEntries(userId, year, month);
       const dates = rows.map((r: any) =>
@@ -23,13 +27,17 @@ export class DiaryController {
     }
   }
 
-  static async getEntry(req: Request, res: Response) {
+  static async getEntry(req: AuthRequest, res: Response) {
     try {
-      const userId = Number(req.query.user_id);
+      const userId = req.user!.id;
       const entryDate = req.query.entry_date as string;
 
-      if (!userId || !entryDate)
-        throw new Error("user_id and entry_date are required");
+      if (!entryDate) {
+        return res.status(400).json({
+          success: false,
+          error: "entry_date is required",
+        });
+      }
 
       const entry = await DiaryService.getEntryByDate(userId, entryDate);
       res.json({ success: true, entry });
@@ -38,15 +46,25 @@ export class DiaryController {
     }
   }
 
-  static async createNew(req: Request, res: Response) {
+  static async createNew(req: AuthRequest, res: Response) {
     try {
-      const { userId, entryDate, content, questionId, emotions } = req.body;
-      if (!userId || !entryDate || !content || !emotions)
-        throw new Error("userId, entryDate, content and emotions are required");
+      const userId = req.user!.id; 
+      const { entryDate, content, questionId, emotions } = req.body;
 
-      if (!Array.isArray(emotions))
-        throw new Error("emotions must be an array");
-      
+      if (!entryDate || !content || !emotions) {
+        return res.status(400).json({
+          success: false,
+          error: "entryDate, content and emotions are required",
+        });
+      }
+
+      if (!Array.isArray(emotions)) {
+        return res.status(400).json({
+          success: false,
+          error: "emotions must be an array",
+        });
+      }
+
       const entry = await DiaryService.createEntry(
         userId,
         entryDate,
@@ -60,16 +78,17 @@ export class DiaryController {
     }
   }
 
-  static async updateEntry(req: Request, res: Response) {
+  static async updateEntry(req: AuthRequest, res: Response) {
     try {
       const entryId = Number(req.params.id);
-      const userId = Number(req.body.userId);
+      const userId = req.user!.id; 
       const { content, questionId, emotions } = req.body;
 
-      if (!entryId || !userId) {
-        return res
-          .status(400)
-          .json({ success: false, error: "entryId and userId are required" });
+      if (!entryId) {
+        return res.status(400).json({
+          success: false,
+          error: "entryId is required",
+        });
       }
 
       const updatedEntry = await DiaryService.updateEntry(
@@ -80,6 +99,13 @@ export class DiaryController {
         emotions
       );
 
+      if (!updatedEntry) {
+        return res.status(404).json({
+          success: false,
+          error: "Entry not found or does not belong to you",
+        });
+      }
+
       res.json({ success: true, entry: updatedEntry });
     } catch (err: any) {
       console.error("Error in updateEntry:", err);
@@ -87,12 +113,19 @@ export class DiaryController {
     }
   }
 
-  static async deleteEntry(req: Request, res: Response) {
+  static async deleteEntry(req: AuthRequest, res: Response) {
     try {
       const entryId = Number(req.params.id);
-      if (!entryId) throw new Error("entryId is required");
+      const userId = req.user!.id; 
 
+      if (!entryId) {
+        return res.status(400).json({
+          success: false,
+          error: "entryId is required",
+        });
+      }
       await DiaryService.deleteEntry(entryId);
+
       res.json({ success: true, message: "Entry deleted" });
     } catch (err: any) {
       res.status(400).json({ success: false, error: err.message });

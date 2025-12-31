@@ -10,3 +10,12 @@ export interface ChatMessage {
 }
 
 export type ReportType = "daily" | "weekly" | "weekly_limited";
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  password_hash: string;
+  timezone: string;
+  created_at: Date;
+}

@@ -1,17 +1,18 @@
 import * as AnalyticsService from "../services/analytics.service";
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthRequest } from "../middleware/auth";
 
 export class AnalyticsController {
-  static async getMonthlyEmotionStats(req: Request, res: Response) {
+  static async getMonthlyEmotionStats(req: AuthRequest, res: Response) {
     try {
-      const userId = Number(req.query.userId);
+      const userId = req.user!.id;
       const year = Number(req.query.year);
       const month = Number(req.query.month);
 
-      if (!userId || !year || !month) {
+      if (!year || !month) {
         return res.status(400).json({
           success: false,
-          error: "user_id, year, and month are required",
+          error: "year and month are required",
         });
       }
 
@@ -27,16 +28,16 @@ export class AnalyticsController {
     }
   }
 
-  static async getWeeklyEmotionStats(req: Request, res: Response) {
+  static async getWeeklyEmotionStats(req: AuthRequest, res: Response) {
     try {
-      const userId = Number(req.query.userId);
+      const userId = req.user!.id; 
       const year = Number(req.query.year);
       const week = Number(req.query.week);
 
-      if (!userId || !year || !week) {
+      if (!year || !week) {
         return res.status(400).json({
           success: false,
-          error: "user_id, year, and week are required",
+          error: "year and week are required",
         });
       }
 
