@@ -10,12 +10,11 @@ export const DiaryFromQuestionPage = () => {
 
   const questionId = params.get("questionId");
   const entryDate = dayjs().format("YYYY-MM-DD");
-  const userId = 1;
 
   useEffect(() => {
     const resolve = async () => {
       try {
-        const entry = await getEntryByDate(userId, entryDate);
+        const entry = await getEntryByDate(entryDate);
 
         if (entry) {
           navigate(`/diary/edit?questionId=${questionId}`, {
@@ -38,7 +37,7 @@ export const DiaryFromQuestionPage = () => {
     };
 
     resolve();
-  }, [questionId, entryDate, navigate, userId]);
+  }, [questionId, entryDate, navigate]);
 
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>

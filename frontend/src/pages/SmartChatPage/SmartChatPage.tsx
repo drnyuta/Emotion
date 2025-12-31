@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { sendChatMessage } from "../../api/aiApi";
 import SmartChat from "../../components/SmartChat/SmartChat";
 import "./SmartChatPage.scss";
@@ -8,8 +8,6 @@ export default function SmartChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isThinking, setIsThinking] = useState(false);
-  const userId = "user-123";
-
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -22,7 +20,7 @@ export default function SmartChatPage() {
     setIsThinking(true);
 
     try {
-      const aiResponse = await sendChatMessage(userId, userMessage.content);
+      const aiResponse = await sendChatMessage(userMessage.content);
       const assistantMessage: Message = {
         role: "assistant",
         content: aiResponse,

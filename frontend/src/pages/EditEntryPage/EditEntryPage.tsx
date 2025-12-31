@@ -61,7 +61,7 @@ export const EditEntryPage = () => {
 
   const loadEntry = async () => {
     try {
-      const entry = await getEntryByDate(userId, entryDate);
+      const entry = await getEntryByDate(entryDate);
 
       if (!entry) {
         throw new Error("Entry not found");
@@ -142,7 +142,7 @@ export const EditEntryPage = () => {
 
       const emotionIds = selectedEmotions.map((e) => e.emotionId);
 
-      await updateEntry(entryData.id, userId, content, questionId, emotionIds);
+      await updateEntry(entryData.id, content, questionId, emotionIds);
 
       navigate("/diary");
     } catch (err) {

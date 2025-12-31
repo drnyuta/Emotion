@@ -1,16 +1,14 @@
-import { ReactNode } from "react";
 import { Sidebar } from "../Sidebar/Sidebar";
 import "./Layout.scss";
+import { Outlet } from "react-router-dom";
 
-interface SidebarLayoutProps {
-  children: ReactNode;
-}
-
-export const Layout: React.FC<SidebarLayoutProps> = ({ children }) => {
+export const Layout: React.FC = () => {
   return (
     <div className="layout">
       <Sidebar />
-      <main className="layout__content">{children}</main>
+      <main className="layout__content">
+        <Outlet />
+      </main>
     </div>
   );
 };

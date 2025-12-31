@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { MENU_ITEMS, MenuItem } from "../../constants/menuItems";
 import BurgerIcon from "../../assets/icons/burger-menu.svg";
 import "./Sidebar.scss";
+import { useAuth } from "../../hooks/useAuth";
+import LogoutIcon from "../../assets/icons/logout.svg";
+import { Modal } from "antd";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const { logoutContext } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -28,6 +34,21 @@ export const Sidebar = () => {
     if (isMobile) {
       setIsOpen(false);
     }
+  };
+
+  const handleLogout = () => {
+    Modal.confirm({
+      title: "Log out",
+      content: "Are you sure you want to log out?",
+      okText: "Log out",
+      cancelText: "Cancel",
+      centered: true,
+      onOk: () => {
+        logoutContext();
+        navigate("/login", { replace: true });
+        closeSidebar();
+      },
+    });
   };
 
   return (
@@ -87,6 +108,21 @@ export const Sidebar = () => {
                 </NavLink>
               </li>
             ))}
+
+            <li className="sidebar__nav-list-item sidebar__nav-list-item--logout">
+              <button
+                type="button"
+                className="sidebar__nav-list-item-link sidebar__logout-button"
+                onClick={handleLogout}
+              >
+                <span className="sidebar__nav-list-item-link__icon">
+                  <img src={LogoutIcon} alt="Logout" />
+                </span>
+                <span className="sidebar__nav-list-item-link__label">
+                  Logout
+                </span>
+              </button>
+            </li>
           </ul>
         </nav>
       </aside>

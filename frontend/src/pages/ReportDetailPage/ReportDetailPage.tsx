@@ -26,7 +26,6 @@ export const ReportDetailPage = () => {
   const [saving, setSaving] = useState(false);
 
   const navigate = useNavigate();
-  const userId = 1;
 
   useEffect(() => {
     fetchReport();
@@ -49,7 +48,7 @@ export const ReportDetailPage = () => {
     setSaving(true);
     try {
       const insightDate = new Date().toISOString().split("T")[0];
-      await createInsight(userId, text, insightDate);
+      await createInsight(text, insightDate);
       setShowInsightForm(false);
       message.success("Insight saved successfully");
     } catch (error) {

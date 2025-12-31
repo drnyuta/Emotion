@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import axiosInstance from "./axios";
 
 export interface EmotionStat {
   emotionName: string;
@@ -9,13 +7,11 @@ export interface EmotionStat {
 }
 
 export const getMonthlyEmotionStats = async (
-  userId: number,
   year: number,
   month: number
 ): Promise<EmotionStat[]> => {
-  const res = await axios.get(`${API_URL}/analytics/monthly`, {
+  const res = await axiosInstance.get("/analytics/monthly", {
     params: {
-      userId,
       year,
       month,
     },
@@ -25,13 +21,11 @@ export const getMonthlyEmotionStats = async (
 };
 
 export const getWeeklyEmotionStats = async (
-  userId: number,
   year: number,
   week: number
 ): Promise<EmotionStat[]> => {
-  const res = await axios.get(`${API_URL}/analytics/weekly`, {
+  const res = await axiosInstance.get("/analytics/weekly", {
     params: {
-      userId,
       year,
       week,
     },

@@ -1,4 +1,4 @@
-@import '../../styles/variables/breakpoints';
+@import "../../styles/variables/breakpoints";
 
 .mobile-header {
   display: none;
@@ -174,5 +174,23 @@
         }
       }
     }
+  }
+
+
+}
+
+.sidebar__logout-button {
+  all: unset;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 22px;
+  background-color: var(--color-sidebar);
+  cursor: pointer;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: #e5d3f9;
   }
 }

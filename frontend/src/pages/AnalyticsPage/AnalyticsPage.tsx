@@ -41,14 +41,13 @@ export const AnalyticsPage = () => {
     setLoading(true);
     try {
       const year = currentDate.getFullYear();
-      const userId = 1;
       let result: EmotionStat[];
       if (period === "Monthly") {
         const month = currentDate.getMonth() + 1;
-        result = await getMonthlyEmotionStats(userId, year, month);
+        result = await getMonthlyEmotionStats(year, month);
       } else {
         const week = getWeekNumber(currentDate);
-        result = await getWeeklyEmotionStats(userId, year, week);
+        result = await getWeeklyEmotionStats(year, week);
       }
       setData(result);
     } catch (error) {

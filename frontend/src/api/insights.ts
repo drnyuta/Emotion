@@ -1,16 +1,11 @@
 import { Insight } from "../globalInterfaces";
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
-
+import axiosInstance from "./axios";
 
 export const createInsight = async (
-  userId: number,
   insightText: string,
   insightDate: string
 ): Promise<Insight> => {
-  const response = await axios.post(`${API_URL}/insights/new`, {
-    userId,
+  const response = await axiosInstance.post("/insights/new", {
     insightText,
     insightDate,
   });
@@ -22,10 +17,8 @@ export const createInsight = async (
   return response.data.data;
 };
 
-export const getAllInsights = async (userId: number): Promise<Insight[]> => {
-  const response = await axios.get(`${API_URL}/insights`, {
-    params: { userId },
-  });
+export const getAllInsights = async (): Promise<Insight[]> => {
+  const response = await axiosInstance.get("/insights");
 
   if (!response.data.success) {
     throw new Error("Failed to load insights");
@@ -35,7 +28,7 @@ export const getAllInsights = async (userId: number): Promise<Insight[]> => {
 };
 
 export const getInsightById = async (insightId: number): Promise<Insight> => {
-  const response = await axios.get(`${API_URL}/insights/${insightId}`);
+  const response = await axiosInstance.get(`/insights/${insightId}`);
 
   if (!response.data.success) {
     throw new Error("Failed to load insight");
@@ -46,11 +39,9 @@ export const getInsightById = async (insightId: number): Promise<Insight> => {
 
 export const updateInsight = async (
   insightId: number,
-  userId: number,
   insightText: string
 ): Promise<Insight> => {
-  const response = await axios.put(`${API_URL}/insights/${insightId}`, {
-    userId,
+  const response = await axiosInstance.put(`/insights/${insightId}`, {
     insightText,
   });
 
@@ -61,15 +52,10 @@ export const updateInsight = async (
   return response.data.data;
 };
 
-export const deleteInsight = async (
-  insightId: number,
-  userId: number
-): Promise<void> => {
-  const response = await axios.delete(`${API_URL}/insights/${insightId}`, {
-    params: { userId },
-  });
+export const deleteInsight = async (insightId: number): Promise<void> => {
+  const response = await axiosInstance.delete(`/insights/${insightId}`);
 
   if (!response.data.success) {
     throw new Error("Failed to delete insight");
   }
-};      
+};

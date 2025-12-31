@@ -29,8 +29,6 @@ export const CreateEntryPage = () => {
   const formattedDate = dayjs(entryDate).format("MMMM D, YYYY");
   const questionIdFromUrl = searchParams.get("questionId");
 
-  const userId = 1;
-
   useEffect(() => {
     const loadEmotions = async () => {
       try {
@@ -80,7 +78,6 @@ export const CreateEntryPage = () => {
       setLoading(true);
       const emotionIds = selectedEmotions.map((e) => e.emotionId);
       await createEntry(
-        userId,
         entryDate,
         content,
         questionId ?? undefined,

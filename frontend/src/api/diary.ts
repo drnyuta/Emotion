@@ -1,15 +1,11 @@
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import axiosInstance from "./axios";
 
 export const getMonthDates = async (
-  userId: number,
   year: number,
   month: number
 ): Promise<string[]> => {
-  const res = await axios.get(`${API_URL}/diary/month`, {
+  const res = await axiosInstance.get("/diary/month", {
     params: {
-      user_id: userId,
       year,
       month,
     },
@@ -18,10 +14,9 @@ export const getMonthDates = async (
   return res.data.dates;
 };
 
-export const getEntryByDate = async (userId: number, date: string) => {
-  const res = await axios.get(`${API_URL}/diary/entry`, {
+export const getEntryByDate = async (date: string) => {
+  const res = await axiosInstance.get("/diary/entry", {
     params: {
-      user_id: userId,
       entry_date: date,
     },
   });
@@ -30,14 +25,12 @@ export const getEntryByDate = async (userId: number, date: string) => {
 };
 
 export const createEntry = async (
-  userId: number,
   entryDate: string,
   content: string,
   questionId?: number,
   emotions?: number[]
 ) => {
-  const res = await axios.post(`${API_URL}/diary/new`, {
-    userId,
+  const res = await axiosInstance.post("/diary/new", {
     entryDate,
     content,
     questionId,
@@ -49,13 +42,11 @@ export const createEntry = async (
 
 export const updateEntry = async (
   entryId: number,
-  userId: number,
   content: string,
   questionId?: number | null,
   emotions?: number[]
 ) => {
-  const res = await axios.put(`${API_URL}/diary/update/${entryId}`, {
-    userId,
+  const res = await axiosInstance.put(`/diary/update/${entryId}`, {
     content,
     questionId,
     emotions,
@@ -65,9 +56,5 @@ export const updateEntry = async (
 };
 
 export const deleteEntry = async (entryId: number) => {
-  await axios.delete(`${API_URL}/diary/delete/${entryId}`, {
-    params: {
-      entry_id: entryId,
-    },
-  });
+  await axiosInstance.delete(`/diary/delete/${entryId}`);
 };

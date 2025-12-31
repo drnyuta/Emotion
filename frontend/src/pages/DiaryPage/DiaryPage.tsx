@@ -13,7 +13,6 @@ import { generateDailyReport } from "../../api/aiApi";
 import { getErrorMessage } from "../../utils/getErrorMessage";
 
 export const DiaryPage = () => {
-  const userId = 1;
   const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
@@ -31,7 +30,7 @@ export const DiaryPage = () => {
         const year = selectedDate.year();
         const month = selectedDate.month() + 1;
 
-        const dates = await getMonthDates(userId, year, month);
+        const dates = await getMonthDates(year, month);
         setDatesWithEntries(dates);
       } catch (err) {
         console.error(err);
@@ -50,10 +49,7 @@ export const DiaryPage = () => {
       setLoading(true);
       setError(null);
 
-      const entryFromApi = await getEntryByDate(
-        userId,
-        date.format("YYYY-MM-DD")
-      );
+      const entryFromApi = await getEntryByDate(date.format("YYYY-MM-DD"));
 
       const mappedEntry = entryFromApi
         ? {

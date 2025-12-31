@@ -19,8 +19,6 @@ export const InsightsPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const userId = 1;
-
   useEffect(() => {
     fetchInsights();
   }, []);
@@ -28,7 +26,7 @@ export const InsightsPage = () => {
   const fetchInsights = async () => {
     setLoading(true);
     try {
-      const data = await getAllInsights(userId);
+      const data = await getAllInsights();
       setInsights(data || []);
     } catch (error) {
       console.error("Failed to fetch insights:", error);
@@ -43,7 +41,7 @@ export const InsightsPage = () => {
     setSaving(true);
     try {
       const insightDate = new Date().toISOString().split("T")[0];
-      const newInsight = await createInsight(userId, text, insightDate);
+      const newInsight = await createInsight(text, insightDate);
       setInsights([newInsight, ...insights]);
       setShowCreateForm(false);
       message.success("Insight saved successfully");
@@ -57,7 +55,7 @@ export const InsightsPage = () => {
 
   const handleUpdate = async (insightId: number, newText: string) => {
     try {
-      const updatedInsight = await updateInsight(insightId, userId, newText);
+      const updatedInsight = await updateInsight(insightId, newText);
       setInsights(
         insights.map((ins) => (ins.id === insightId ? updatedInsight : ins))
       );
@@ -70,7 +68,7 @@ export const InsightsPage = () => {
 
   const handleDelete = async (insightId: number) => {
     try {
-      await deleteInsight(insightId, userId);
+      await deleteInsight(insightId);
       setInsights(insights.filter((ins) => ins.id !== insightId));
       message.success("Insight deleted successfully");
     } catch (error) {
@@ -97,7 +95,7 @@ export const InsightsPage = () => {
                 top: 0,
                 right: 0,
                 marginBottom: 0,
-                zIndex: 10
+                zIndex: 10,
               }}
             >
               <SaveInsightModal
