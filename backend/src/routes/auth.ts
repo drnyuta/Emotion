@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/auth.controller";
+import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
@@ -17,5 +18,8 @@ router.post("/reset-password", AuthController.resetPassword);
 
 // GET /auth/verify
 router.get("/verify", AuthController.verifyToken);
+
+// DELETE /auth/account 
+router.delete("/account", authMiddleware, AuthController.deleteAccount);
 
 export default router;

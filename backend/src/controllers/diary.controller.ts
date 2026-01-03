@@ -17,12 +17,11 @@ export class DiaryController {
       }
 
       const rows = await DiaryService.getDatesWithEntries(userId, year, month);
-      const dates = rows.map((r: any) =>
-        r.entry_date.toLocaleDateString("en-CA")
-      );
+      const dates = rows.map((r: any) => r.entry_date);
 
       res.json({ success: true, dates });
     } catch (err: any) {
+      console.error("Error in getMonthDates:", err);
       res.status(400).json({ success: false, error: err.message });
     }
   }
@@ -42,6 +41,7 @@ export class DiaryController {
       const entry = await DiaryService.getEntryByDate(userId, entryDate);
       res.json({ success: true, entry });
     } catch (err: any) {
+      console.error("Error in getEntry:", err); 
       res.status(400).json({ success: false, error: err.message });
     }
   }
@@ -74,6 +74,7 @@ export class DiaryController {
       );
       res.json({ success: true, entry });
     } catch (err: any) {
+      console.error("Error in createNew:", err); 
       res.status(400).json({ success: false, error: err.message });
     }
   }
@@ -128,6 +129,7 @@ export class DiaryController {
 
       res.json({ success: true, message: "Entry deleted" });
     } catch (err: any) {
+      console.error("Error in deleteEntry:", err);
       res.status(400).json({ success: false, error: err.message });
     }
   }

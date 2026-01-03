@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as AuthService from "../services/auth.service";
+import { AuthRequest } from "../middleware/auth";
 
 export class AuthController {
   static async register(req: Request, res: Response) {
@@ -125,6 +126,23 @@ export class AuthController {
       });
     } catch (err: any) {
       res.status(401).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  static async deleteAccount(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.id;
+      await AuthService.deleteAccount(userId);
+
+      res.json({
+        success: true,
+        message: "Account successfully deleted",
+      });
+    } catch (err: any) {
+      res.status(400).json({
         success: false,
         message: err.message,
       });

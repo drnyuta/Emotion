@@ -1,4 +1,5 @@
 import { client } from "../database";
+import { updateStreakOnEntry } from "./streak.service";
 
 export const getDatesWithEntries = async (
   userId: number,
@@ -6,7 +7,7 @@ export const getDatesWithEntries = async (
   month: number
 ) => {
   const res = await client.query(
-    `SELECT entry_date FROM diary_entries
+    `SELECT entry_date::text as entry_date FROM diary_entries
      WHERE user_id = $1
        AND EXTRACT(YEAR FROM entry_date) = $2
        AND EXTRACT(MONTH FROM entry_date) = $3`,
@@ -17,7 +18,10 @@ export const getDatesWithEntries = async (
 
 export const getEntryByDate = async (userId: number, entryDate: string) => {
   const entryRes = await client.query(
-    `SELECT * FROM diary_entries WHERE user_id = $1 AND entry_date = $2`,
+    `SELECT id, user_id, entry_date::text as entry_date, content, question_id, 
+            created_at, updated_at 
+     FROM diary_entries 
+     WHERE user_id = $1 AND entry_date::date = $2::date`,
     [userId, entryDate]
   );
 
@@ -49,7 +53,7 @@ export const getEntryByDate = async (userId: number, entryDate: string) => {
   return {
     id: entry.id,
     user_id: entry.user_id,
-    entry_date: entry.entry_date.toLocaleDateString("en-CA"),
+    entry_date: entry.entry_date, 
     content: entry.content,
     question_id: entry.question_id,
     created_at: entry.created_at.toISOString(),
@@ -67,8 +71,8 @@ export const createEntry = async (
 ) => {
   const res = await client.query(
     `INSERT INTO diary_entries (user_id, entry_date, content, question_id, created_at, updated_at)
-     VALUES ($1, $2, $3, $4, NOW(), NOW())
-     RETURNING *`,
+     VALUES ($1, $2::date, $3, $4, NOW(), NOW())
+     RETURNING id, user_id, entry_date::text as entry_date, content, question_id, created_at, updated_at`,
     [userId, entryDate, content, questionId || null]
   );
 
@@ -83,6 +87,12 @@ export const createEntry = async (
       `INSERT INTO entry_emotions (entry_id, emotion_id) VALUES ${insertValues}`,
       [entry.id, ...emotions]
     );
+  }
+
+  try {
+    await updateStreakOnEntry(userId, entryDate);
+  } catch (error) {
+    console.error("Failed to update streak:", error);
   }
 
   return entry;
@@ -123,7 +133,7 @@ export const updateEntry = async (
         UPDATE diary_entries
         SET ${updates.join(", ")}
         WHERE id = $${paramCounter} AND user_id = $${paramCounter + 1}
-        RETURNING *
+        RETURNING id, user_id, entry_date::text as entry_date, content, question_id, created_at, updated_at
       `;
 
       const res = await client.query(query, values);
@@ -163,13 +173,13 @@ export const updateEntry = async (
     await client.query("COMMIT");
 
     const updatedRow = await client.query(
-      `SELECT entry_date FROM diary_entries WHERE id = $1 AND user_id = $2`,
+      `SELECT entry_date::text as entry_date FROM diary_entries WHERE id = $1 AND user_id = $2`,
       [entryId, userId]
     );
 
     if (updatedRow.rows.length === 0) return null;
 
-    const entryDate = updatedRow.rows[0].entry_date.toLocaleDateString("en-CA");
+    const entryDate = updatedRow.rows[0].entry_date;
     const updatedEntry = await getEntryByDate(userId, entryDate);
     return updatedEntry;
   } catch (err) {
@@ -185,4 +195,3 @@ export const deleteEntry = async (entryId: number) => {
   ]);
   await client.query(`DELETE FROM diary_entries WHERE id = $1`, [entryId]);
 };
-

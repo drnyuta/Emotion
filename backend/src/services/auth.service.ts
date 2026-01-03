@@ -182,3 +182,34 @@ export const getUserById = async (userId: number) => {
 
   return result.rows[0];
 };
+
+export const deleteAccount = async (userId: number) => {
+  try {
+    await client.query("BEGIN");
+
+    await client.query("DELETE FROM ai_reports WHERE user_id = $1", [userId]);
+    await client.query("DELETE FROM insights WHERE user_id = $1", [userId]);
+    await client.query("DELETE FROM password_reset_tokens WHERE user_id = $1", [userId]);
+
+    await client.query(
+      `DELETE FROM entry_emotions 
+       WHERE entry_id IN (
+         SELECT id FROM diary_entries WHERE user_id = $1
+       )`,
+      [userId]
+    );
+
+    await client.query("DELETE FROM diary_entries WHERE user_id = $1", [userId]);
+    await client.query("DELETE FROM user_streaks WHERE user_id = $1", [userId]);
+    await client.query("DELETE FROM users WHERE id = $1", [userId]);
+
+    await client.query("COMMIT");
+
+    return { message: "Account successfully deleted" };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error("Error deleting account:", error);
+    throw new Error("Failed to delete account. Please try again.");
+  }
+};
+
