@@ -1,0 +1,36 @@
+@import '../../styles/variables/breakpoints';
+
+.emotion-wheel {
+  svg {
+    width: 360px;
+    height: 360px;
+    max-width: 100%;
+    height: auto;
+    cursor: pointer;
+
+    @include mobile {
+      width: 280px;
+      height: 280px;
+    }
+  }
+
+  &__label {
+    font-size: 20px;
+
+    @include mobile {
+      font-size: 16px;
+    }
+  }
+
+  &--loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  &--error {
+    color: var(--color-red);
+  }
+}

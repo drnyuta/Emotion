@@ -1,0 +1,68 @@
+@use "../../styles/variables/breakpoints";
+
+.save-insight-modal {
+  background: var(--color-dark-gradient);
+  padding: 20px;
+  border-radius: 2px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: fit-content;
+  box-sizing: border-box;
+  box-shadow: 0 2px 18px 0 rgba(0, 0, 0, 0.7);
+
+  @include breakpoints.mobile {
+    gap: 16px;
+    padding: 12px;
+    width: 100%;
+  }
+
+  &__title {
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    align-self: center;
+
+    @include breakpoints.mobile {
+      font-size: 18px;
+    }
+  }
+
+  &__textarea {
+    min-height: 120px;
+    padding: 16px;
+    border: none;
+    border-radius: 2px;
+    font-family: inherit;
+    font-size: 16px;
+    resize: vertical;
+    background: white;
+    color: #333;
+    width: 400px;
+    box-sizing: border-box;
+
+    @include breakpoints.mobile {
+      width: 100%;
+      font-size: 14px;
+      padding: 12px;
+      min-height: 100px;
+    }
+
+    &::placeholder {
+      color: #999;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-self: flex-end;
+  }
+}

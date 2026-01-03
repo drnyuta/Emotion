@@ -1,0 +1,26 @@
+# docker-compose.prod.yml
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production
+    container_name: emotion-backend-prod
+    ports:
+      - "5000:5000"
+    env_file: backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: emotion-frontend-prod
+    ports:
+      - "80:80"
+    restart: unless-stopped

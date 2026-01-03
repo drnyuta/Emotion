@@ -1,0 +1,16 @@
+.diary-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.error {
+  color: var(--color-red);
+  width: fit-content;
+}

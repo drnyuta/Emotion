@@ -1,0 +1,16 @@
+.back-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+  padding: 0;
+
+  &:hover {
+    transform: translateX(-2px);
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}

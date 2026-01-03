@@ -10,6 +10,7 @@ body {
 h1 {
   font-family: var(--font-heading);
   font-size: 40px;
+  font-weight: 400;
   color: var(--color-dark-blue);
   margin: 0;
 }
@@ -22,6 +23,7 @@ h2 {
 
 h3 {
   font-size: 24px;
+  font-weight: 400;
   margin: 0;
 }
 
@@ -39,8 +41,14 @@ a {
     font-size: 26px;
   }
 
+  h2 {
+    font-size: 20px;
+  }
+
   p,
-  li {
+  li,
+  a,
+  h3 {
     font-size: 16px;
     line-height: 28px;
   }

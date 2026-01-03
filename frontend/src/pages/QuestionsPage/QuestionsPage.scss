@@ -1,0 +1,88 @@
+@use "../../styles/variables/breakpoints";
+
+.questions-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+
+  @include breakpoints.mobile {
+    gap: 20px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    list-style: none;
+    background-color: var(--color-dusty-purple);
+    border-radius: 12px;
+    padding: 20px 16px;
+    margin: 0;
+
+    @include breakpoints.mobile {
+      gap: 12px;
+      padding: 12px;
+    }
+  }
+
+  &__item {
+    background-color: #cf97ff;
+    border-radius: 12px;
+    padding: 20px 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(155, 127, 212, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @include breakpoints.mobile {
+      padding: 16px 20px;
+      border-radius: 12px;
+    }
+  }
+
+  &__question {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #000;
+    line-height: 1.5;
+    margin: 0;
+
+    @include breakpoints.mobile {
+      font-size: 14px;
+      gap: 10px;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+
+    @include breakpoints.mobile {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &--loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__error {
+    color: var(--color-red);
+    font-size: 16px;
+  }
+}

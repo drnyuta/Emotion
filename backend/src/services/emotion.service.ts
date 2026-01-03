@@ -1,0 +1,40 @@
+import { client } from "../database";
+
+export const getCategoriesWithEmotions = async () => {
+  const categoriesRes = await client.query(
+    `SELECT id, name FROM emotion_categories ORDER BY name`
+  );
+
+  const result = [];
+
+  for (const category of categoriesRes.rows) {
+    const emotionsRes = await client.query(
+      `SELECT id, name FROM emotions WHERE category_id = $1 ORDER BY name`,
+      [category.id]
+    );
+
+    result.push({
+      id: category.id,
+      name: category.name,
+      emotions: emotionsRes.rows,
+    });
+  }
+
+  return result;
+};
+
+export const getEmotionById = async (id: number) => {
+  const res = await client.query(
+    `SELECT id, name, definition, triggers, recommendations
+     FROM emotions
+     WHERE id = $1`,
+    [id]
+  );
+
+  if (!res.rows.length) {
+    throw new Error("Emotion not found");
+  }
+
+  return res.rows[0];
+};
+

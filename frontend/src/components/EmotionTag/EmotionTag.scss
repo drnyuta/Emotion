@@ -1,0 +1,84 @@
+@import '../../styles/variables/breakpoints';
+
+.emotion-tag {
+  display: inline-block;
+  border-radius: 20px;
+  font-weight: 500;
+  text-transform: lowercase;
+  color: #000;
+  user-select: none;
+  padding: 8px 18px;
+  font-size: 16px;
+  position: relative;
+  transition: all 0.2s ease;
+
+  @include mobile {
+    padding: 6px 14px;
+    font-size: 14px;
+    border-radius: 16px;
+  }
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &--removable {
+    padding-right: 24px;
+
+    @include mobile {
+      padding-right: 20px;
+    }
+  }
+
+  &__cross {
+    height: 18px;
+
+    @include mobile {
+      height: 14px;
+    }
+  }
+
+  &__remove {
+    position: absolute;
+    top: -6px;
+    right: -12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #D9D9D9;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    color: #000;
+    padding: 4px;
+    z-index: 1;
+    transition: all 0.2s ease;
+
+    @include mobile {
+      top: -4px;
+      right: -8px;
+      padding: 3px;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}

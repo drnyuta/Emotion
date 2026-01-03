@@ -1,6 +1,7 @@
-CREATE ROLE admin LOGIN PASSWORD '<ADMIN_PASSWORD>';
-CREATE ROLE app_write LOGIN PASSWORD '<APP_WRITE_PASSWORD>';
-CREATE ROLE app_read LOGIN PASSWORD '<APP_READ_PASSWORD>';
+-- Replace the placeholders below with your own secure passwords
+CREATE ROLE admin LOGIN PASSWORD '<AdminPassword>';
+CREATE ROLE app_write LOGIN PASSWORD '<WritePassword>';
+CREATE ROLE app_read LOGIN PASSWORD '<ReadPassword>';
 
 GRANT CONNECT ON DATABASE emotion_diary TO admin;
 GRANT CONNECT ON DATABASE emotion_diary TO app_write;

@@ -1,0 +1,230 @@
+@import '../../styles//variables/breakpoints.scss';
+
+.diary-entry {
+  background: #f6ecf4;
+  padding: 30px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+
+  @include mobile {
+    padding: 20px 16px;
+    gap: 20px;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &--expanded {
+    .diary-entry__content {
+      max-height: none;
+    }
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }
+
+  &__date {
+    font-weight: 700;
+
+    @include mobile {
+      font-size: 18px;
+    }
+  }
+
+  &__analyse-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-purple);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    @include mobile {
+      font-size: 14px;
+      padding: 0;
+      align-self: flex-start;
+
+      img {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__emotions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    @include mobile {
+      gap: 8px;
+    }
+  }
+
+  &__emotion-tag {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: lowercase;
+    color: #000;
+
+    @include mobile {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }
+
+  &__content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 2px;
+    border: 1px solid #c7c7c7;
+
+    @include mobile {
+      padding: 16px;
+    }
+
+    p {
+      font-size: 14px;
+      font-family: var(--font-handwriting);
+      line-height: 2;
+      color: var(--color-dark-blue);
+      margin: 0;
+
+      @include mobile {
+        font-size: 13px;
+        line-height: 1.8;
+      }
+    }
+
+    &--empty p {
+      color: #c7c7c7;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+  }
+
+  &__actions-right {
+    display: flex;
+    gap: 12px;
+
+    @include mobile {
+      width: 100%;
+      
+      button {
+        flex: 1;
+      }
+    }
+  }
+
+  &__view-more-btn {
+    padding: 12px 24px;
+    background: #7c3aed;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    @include mobile {
+      width: 100%;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+
+    &:hover {
+      background: #6d28d9;
+    }
+  }
+
+  &__edit-btn,
+  &__delete-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    @include mobile {
+      justify-content: center;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  &__edit-btn {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+
+    svg {
+      stroke: #374151;
+    }
+
+    &:hover {
+      background: #e5e7eb;
+      border-color: #d1d5db;
+    }
+  }
+
+  &__delete-btn {
+    background: #1f2937;
+    color: #ffffff;
+
+    svg {
+      stroke: #ffffff;
+    }
+
+    &:hover {
+      background: #111827;
+    }
+  }
+}

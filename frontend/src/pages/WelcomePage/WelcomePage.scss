@@ -1,0 +1,26 @@
+.welcome-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: linear-gradient(180deg, #f6ecf4 0%, #c8bfe3 54.33%, #fdc8ff 100%);
+
+  @media (max-width: 480px) {
+    gap: 10px;
+  }
+
+  &__header {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+    max-width: 600px;
+  }
+}

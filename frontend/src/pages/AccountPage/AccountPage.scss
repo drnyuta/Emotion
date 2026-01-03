@@ -1,0 +1,64 @@
+.account-page {
+  &__title {
+    margin-bottom: 24px;
+  }
+
+  &__loader {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+  }
+}
+
+.account-card {
+  margin-bottom: 16px;
+}
+
+.account-email {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.delete-account-btn {
+  margin-left: 12px;
+}
+
+.streak-description {
+  font-size: 16px;
+}
+
+.streak-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title, .streak-title {
+  color: var(--color-dark-blue);
+  font-weight: 500;
+}
+
+.streak-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid black;
+  padding: 12px;
+
+  &__value {
+    font-size: 20px;
+  }
+}
+
+.streak-info {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  color: var(--color-dark-blue);
+}
+
+.account-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}

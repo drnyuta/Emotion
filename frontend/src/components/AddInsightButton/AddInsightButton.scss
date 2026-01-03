@@ -1,0 +1,32 @@
+.add-insight-button {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--color-dark-gradient);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 18px 0 rgba(0, 0, 0, 0.7);
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &__text {
+    color: white;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+}

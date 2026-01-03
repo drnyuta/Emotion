@@ -1,6 +1,6 @@
 import { MIN_WEEKLY_ENTRIES } from "../constants/ai.config";
 import { CRISIS_RESPONSE } from "../constants/crisis.response";
-import { WeeklyEntry } from "../types";
+import { ChatMessage, WeeklyEntry } from "../types";
 
 export function buildDailyPrompt(
   entryText: string,
@@ -102,7 +102,10 @@ OUTPUT FORMAT:
 Return ONLY a valid JSON object with the following structure:
 {
   "dominantEmotion": "string",
-  "mainTrigger": "string",
+  "mainTriggers": [
+    {"title": "string", "description": "string"},
+    ...
+  ],
   "overview": "string",
   "recurringPatterns": [
     {"title": "string", "description": "string"},
@@ -133,7 +136,15 @@ END.
 `;
 }
 
-export function buildChatPrompt(message: string) {
+export function buildChatPrompt(history: ChatMessage[], message: string) {
+  const historyText = history
+    .map((msg) => {
+      const role = msg.role === "user" ? "USER" : "AI";
+      const text = msg.parts.map((p) => p.text).join(" ");
+      return `${role} MESSAGE:\n${text}`;
+    })
+    .join("\n\n");
+
   return `
 ROLE:
 You are an empathetic emotional support assistant.
@@ -155,6 +166,9 @@ RULES:
 - If message contains distress, self-harm, or crisis indicators, respond ONLY with supportive guidance and safety instructions and include this message: ${CRISIS_RESPONSE}.
 - Never give medical, clinical, or factual advice. Stick to emotional reflection and support.
 - Do NOT include markdown, extra text, backticks, bold text (**), \n
+
+CHAT HISTORY:
+${historyText}
 
 USER MESSAGE:
 ${message}

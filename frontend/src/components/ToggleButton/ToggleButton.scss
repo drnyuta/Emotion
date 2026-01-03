@@ -1,0 +1,40 @@
+.toggle-button {
+  display: inline-flex;
+  height: 49px;
+  padding: 4px 8px;
+  align-items: center;
+  gap: 16px;
+  border-radius: 14px;
+  background: #f8f8ff;
+
+  &__option {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 14px;
+    background: transparent;
+    color: #666;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+      color: #333;
+    }
+
+    &--active {
+      background: var(--color-dark-blue);
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        color: white;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    align-self: flex-start;
+  }
+}
