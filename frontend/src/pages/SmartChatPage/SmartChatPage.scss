@@ -1,4 +1,11 @@
+@use "../../styles/variables/breakpoints";
+
 .smart-chat-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+
   &__container {
     max-width: 80%;
     width: 100%;
@@ -9,5 +16,18 @@
     flex-direction: column;
     height: 90vh;
     overflow: hidden;
+
+    @include breakpoints.tablet-only {
+      max-width: calc(100% - 20px);
+      height: calc(100vh - 120px);
+      margin: 10px;
+    }
+
+    @include breakpoints.mobile {
+      max-width: 100%;
+      height: calc(100vh - var(--mobile-header-height) - 40px);
+      border-radius: 0;
+      box-shadow: none;
+    }
   }
 }

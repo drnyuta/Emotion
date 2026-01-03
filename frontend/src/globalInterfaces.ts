@@ -62,3 +62,12 @@ export interface Insight {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Streak {
+  id: number;
+  userId: number;
+  streakStartDate: string;
+  streakLength: number;
+  createdAt: string;
+  updatedAt: string;
+}

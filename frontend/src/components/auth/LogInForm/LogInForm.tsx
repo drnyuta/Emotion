@@ -45,7 +45,7 @@ export const LogInForm = () => {
       if (token) {
         loginContext(token, email);
         console.log(token)
-        navigate('/diary');
+        navigate('/');
       }
     } catch (error: unknown) {
       const err = error as AxiosError<{ message: string }>;

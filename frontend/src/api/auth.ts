@@ -24,3 +24,8 @@ export const forgotPassword = async (email: string) => {
 export const resetPassword = async (token: string, password: string) => {
   return axiosInstance.post("/auth/reset-password", { token, password });
 };
+
+export const deleteAccount = async () => {
+  const response = await axiosInstance.delete("/auth/account");
+  return response.data;
+};

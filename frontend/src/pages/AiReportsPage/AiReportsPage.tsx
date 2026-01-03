@@ -151,7 +151,7 @@ export const AiReportsPage = () => {
             <p>Create an entry to have AI feedback!</p>
             <Button
               text="Create"
-              onClick={() => navigate("/diary")}
+              onClick={() => navigate("/")}
               variant="blue"
               size="large"
             />

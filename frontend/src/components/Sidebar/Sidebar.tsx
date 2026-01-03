@@ -1,37 +1,78 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { Modal } from "antd";
+
 import { MENU_ITEMS, MenuItem } from "../../constants/menuItems";
 import BurgerIcon from "../../assets/icons/burger-menu.svg";
-import "./Sidebar.scss";
-import { useAuth } from "../../hooks/useAuth";
 import LogoutIcon from "../../assets/icons/logout.svg";
-import { Modal } from "antd";
+import SparksIcon from "../../assets/icons/yellow-sparks.svg";
+
+import { useAuth } from "../../hooks/useAuth";
+import { getCurrentStreak } from "../../api/streak";
+
+import "./Sidebar.scss";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isTablet, setIsTablet] = useState(
+    window.innerWidth > 768 && window.innerWidth <= 980
+  );
+  const [streakDays, setStreakDays] = useState(0);
 
   const { logoutContext } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-      if (window.innerWidth > 768) {
+      const width = window.innerWidth;
+
+      setIsMobile(width <= 768);
+      setIsTablet(width > 768 && width <= 980);
+
+      if (width <= 768) {
+        setIsCollapsed(false);
         setIsOpen(false);
+      } else if (width <= 980) {
+        setIsCollapsed(true);
+        setIsOpen(false);
+      } else {
+        setIsCollapsed(false);
+        setIsOpen(true);
       }
     };
 
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const loadStreakData = async () => {
+      try {
+        const current = await getCurrentStreak();
+        setStreakDays(current?.streakLength || 0);
+      } catch (e) {
+        console.error("Failed to load streak info", e);
+      }
+    };
+
+    loadStreakData();
+  }, []);
+
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    if (isMobile) {
+      setIsOpen((prev) => !prev);
+    } else if (isTablet) {
+      setIsOpen((prev) => !prev);
+    } else {
+      setIsCollapsed((prev) => !prev);
+    }
   };
 
   const closeSidebar = () => {
-    if (isMobile) {
+    if (isMobile || isTablet) {
       setIsOpen(false);
     }
   };
@@ -66,24 +107,46 @@ export const Sidebar = () => {
               alt="menu"
             />
           </button>
+
+          <div className="streak-indicator">
+            <p className="streak-indicator__value">{streakDays}</p>
+            <img
+              src={SparksIcon}
+              alt="icon"
+              className="streak-indicator__icon"
+            />
+          </div>
         </header>
       )}
 
-      {isMobile && isOpen && (
+      {(isMobile || isTablet) && isOpen && (
         <div className="sidebar-overlay" onClick={closeSidebar} />
       )}
 
-      <aside className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
+      <aside
+        className={`sidebar 
+          ${isOpen ? "sidebar--open" : ""} 
+          ${isCollapsed ? "sidebar--collapsed" : ""}
+          ${isTablet ? "sidebar--tablet" : ""}
+        `}
+      >
         <div className="sidebar__header">
-          {!isMobile && (
-            <button className="sidebar__burger-menu">
-              <img
-                className="sidebar__burger-menu-icon"
-                src={BurgerIcon}
-                alt="burger menu"
-              />
-            </button>
-          )}
+          <button className="sidebar__burger-menu" onClick={toggleSidebar}>
+            <img
+              className="sidebar__burger-menu-icon"
+              src={BurgerIcon}
+              alt="burger menu"
+            />
+          </button>
+
+          <div className="streak-indicator">
+            <p className="streak-indicator__value">{streakDays}</p>
+            <img
+              src={SparksIcon}
+              alt="icon"
+              className="streak-indicator__icon"
+            />
+          </div>
         </div>
 
         <nav className="sidebar__nav">

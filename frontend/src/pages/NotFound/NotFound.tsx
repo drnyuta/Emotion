@@ -13,7 +13,7 @@ export const NotFound = () => {
       <p>Please check the URL or return to the homepage.</p>
       <Button
         text="Go Home"
-        onClick={() => navigate("/diary")}
+        onClick={() => navigate("/")}
         variant="blue"
         size="large"
       />

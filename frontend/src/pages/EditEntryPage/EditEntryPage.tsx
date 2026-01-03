@@ -144,7 +144,7 @@ export const EditEntryPage = () => {
 
       await updateEntry(entryData.id, content, questionId, emotionIds);
 
-      navigate("/diary");
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError("Failed to update entry");
@@ -160,7 +160,7 @@ export const EditEntryPage = () => {
       okText: "Yes, cancel",
       cancelText: "No, stay",
       onOk() {
-        navigate("/diary");
+        navigate("/");
       },
     });
   };
@@ -197,7 +197,7 @@ export const EditEntryPage = () => {
       <div className="edit-entry-page__header">
         <Breadcrumb
           className="edit-entry-page__breadcrumb"
-          items={[{ title: "Diary", href: "/diary" }, { title: "Edit Entry" }]}
+          items={[{ title: "Diary", href: "/" }, { title: "Edit Entry" }]}
         />
         <button className="edit-entry-page__back" onClick={handleCancel}>
           <img src={BackArrow} alt="back" />

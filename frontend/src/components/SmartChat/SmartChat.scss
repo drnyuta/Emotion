@@ -1,11 +1,11 @@
-@import '../../styles/variables/breakpoints';
+@use "../../styles/variables/breakpoints";
 
 .chat {
   display: flex;
   flex-direction: column;
   height: 100%;
 
-  @include tablet {
+  @include breakpoints.tablet-only {
     position: fixed;
     top: 0;
     left: 0;
@@ -15,9 +15,14 @@
     z-index: 100;
   }
 
-  @media (max-width: 768px) {
+  @include breakpoints.mobile {
+    position: fixed;
     top: var(--mobile-header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
     height: calc(100vh - var(--mobile-header-height));
+    z-index: 100;
   }
 
   &__header {
@@ -31,7 +36,19 @@
     flex-direction: column;
     gap: 10px;
 
-    @include mobile {
+    @include breakpoints.tablet-only {
+      padding: 24px 16px;
+
+      h2 {
+        font-size: 22px;
+      }
+
+      p {
+        font-size: 15px;
+      }
+    }
+
+    @include breakpoints.mobile {
       padding: 20px 16px;
 
       h2 {
@@ -53,7 +70,12 @@
     overflow-y: auto;
     background-color: #f4effd;
 
-    @include mobile {
+    @include breakpoints.tablet-only {
+      padding: 14px;
+      gap: 11px;
+    }
+
+    @include breakpoints.mobile {
       padding: 12px;
       gap: 10px;
     }
@@ -69,7 +91,14 @@
     font-size: 16px;
     line-height: 1.5;
 
-    @include mobile {
+    @include breakpoints.tablet-only {
+      max-width: 85%;
+      padding: 8px 14px;
+      font-size: 15px;
+      border-radius: 14px;
+    }
+
+    @include breakpoints.mobile {
       max-width: 90%;
       padding: 8px 12px;
       font-size: 14px;
@@ -80,7 +109,7 @@
     li {
       font-family: inherit;
       font-size: inherit;
-      margin: 0; 
+      margin: 0;
     }
 
     &--user {
@@ -105,7 +134,12 @@
       align-items: center;
       gap: 8px;
 
-      @include mobile {
+      @include breakpoints.tablet-only {
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+
+      @include breakpoints.mobile {
         padding: 8px 12px;
         font-size: 13px;
       }
@@ -120,7 +154,12 @@
     border-top: 1px solid #e2e8f0;
     background-color: #fdfdfd;
 
-    @include mobile {
+    @include breakpoints.tablet-only {
+      padding: 14px;
+      gap: 7px;
+    }
+
+    @include breakpoints.mobile {
       padding: 12px;
       gap: 6px;
     }
@@ -135,7 +174,13 @@
       outline: none;
       font-family: var(--paragraph);
 
-      @include mobile {
+      @include breakpoints.tablet-only {
+        padding: 16px 18px;
+        font-size: 15px;
+        border-radius: 14px;
+      }
+
+      @include breakpoints.mobile {
         padding: 12px 16px;
         font-size: 14px;
         border-radius: 12px;
@@ -152,7 +197,13 @@
       color: #000;
       cursor: pointer;
 
-      @include mobile {
+      @include breakpoints.tablet-only {
+        padding: 16px 32px;
+        font-size: 18px;
+        border-radius: 14px;
+      }
+
+      @include breakpoints.mobile {
         padding: 12px 24px;
         font-size: 16px;
         border-radius: 12px;

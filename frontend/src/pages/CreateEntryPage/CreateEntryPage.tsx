@@ -83,7 +83,7 @@ export const CreateEntryPage = () => {
         questionId ?? undefined,
         emotionIds
       );
-      navigate("/diary");
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError("Failed to save entry");
@@ -99,7 +99,7 @@ export const CreateEntryPage = () => {
       okText: "Yes, cancel",
       cancelText: "No, stay",
       onOk() {
-        navigate("/diary");
+        navigate("/");
       },
     });
   };
@@ -123,7 +123,7 @@ export const CreateEntryPage = () => {
       <div className="create-entry-page__header">
         <Breadcrumb
           className="create-entry-page__breadcrumb"
-          items={[{ title: "Diary", href: "/diary" }, { title: "New Entry" }]}
+          items={[{ title: "Diary", href: "/" }, { title: "New Entry" }]}
         />
         <button className="create-entry-page__back" onClick={handleCancel}>
           <img src={BackArrow} alt="back" />
