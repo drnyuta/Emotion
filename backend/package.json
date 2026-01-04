@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
-    "build": "tsc && copyfiles swagger.yaml dist",
+    "build": "tsc && copyfiles -f swagger.yaml dist",
     "start": "node dist/server.js"
   },
   "dependencies": {
