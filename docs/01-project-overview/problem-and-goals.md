@@ -44,14 +44,14 @@ At the same time, emotional intelligence (EQ) is rarely taught formally in educa
 
 | Objective | Metric | Current Value | Target Value | Timeline |
 |-----------|--------|---------------|--------------|----------|
-| Build user base for MVP testing | Number of registered users | 0 | 30-50 | End of development phase |
-| Achieve consistent journaling habits | Weekly active users / Total users | N/A | ≥60% | 2 weeks post-launch |
-| Validate AI accuracy | User confirmation of AI-detected emotions | N/A | ≥80% | Ongoing during testing |
-| Ensure system reliability | API response time for key actions | N/A | <2 seconds | Throughout development |
-| Maintain high availability | System uptime during testing | N/A | ≥99% | Testing phase |
-| Demonstrate educational value | Users who explore Emotion Wheel | N/A | ≥70% | First week of use |
-| Validate UX quality | User satisfaction rate | N/A | ≥70% | Post-MVP survey |
-| Prove engagement value | Average entries per active user per week | N/A | ≥4 | 3 weeks post-launch |
+| Build user base for MVP testing | Number of registered users | 0 | 30-50 | 2 weeks post-launch |
+| Achieve consistent journaling habits | Weekly active users / Total users | 0 | ≥60% | 2 weeks post-launch |
+| Validate AI accuracy | User confirmation of AI-detected emotions | 85% | ≥80% | Ongoing during testing |
+| Ensure system reliability | API response time for key actions | ~ 7 seconds | <10 seconds | Throughout development |
+| Maintain high availability | System uptime during testing | 100% | ≥99% | Testing phase |
+| Demonstrate educational value | Users who explore Emotion Wheel | 0 | ≥70% | First week of use |
+| Validate UX quality | User satisfaction rate | TBD | ≥70% | Post-MVP survey |
+| Prove engagement value | Average entries per active user per week | 0 | ≥4 | 3 weeks post-launch |
 
 ## Success Criteria
 
