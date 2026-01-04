@@ -6,19 +6,23 @@ import { client, connectDB } from "./database";
 
 const PORT = process.env.PORT || 5000;
 
-app.get('/health', async (_req, res) => {
+app.get("/health", async (_req, res) => {
   try {
-    await client.query('SELECT 1');
-    res.status(200).send('OK');
+    await client.query("SELECT 1");
+    res.status(200).send("OK");
   } catch (err) {
-    console.error('Healthcheck failed:', err);
-    res.status(500).send('Database connection failed');
+    console.error("Healthcheck failed:", err);
+    res.status(500).send("Database connection failed");
   }
 });
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Swagger docs: http://localhost:${PORT}/api-docs`);
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to database:", err);
+    process.exit(1); 
   });
-});
