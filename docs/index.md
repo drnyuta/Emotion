@@ -1,4 +1,4 @@
-# [Project Name]
+# Emotion Diary
 
 ## Project Information
 
@@ -15,24 +15,28 @@
 |----------|-----|
 | Production | https://emotion-amber.vercel.app |
 | Repository | https://github.com/drnyuta/Emotion/tree/main |
-| API Docs | [Swagger/OpenAPI URL] |
+| API Docs | available only locally http://localhost:5000/api-docs |
 | Design | https://www.figma.com/design/xgrs1dQC3LwKxozlFfmQ17/Emotion?node-id=0-1&p=f&t=xpnuQ2E1sYyZgMBd-0 |
 
 ## Elevator Pitch
 
-[One paragraph (3-5 sentences) that explains: What is the product? Who is it for? What problem does it solve? What makes it unique?]
+Emotion Diary is an AI-powered journaling platform that helps young adults understand their emotions and build emotional intelligence. 
+
+Unlike basic mood trackers, it combines guided journaling, an educational emotion wheel and smart AI analysis that reveals your emotional patterns, triggers, and personalized recommendations. 
+
+It's like having a supportive companion that helps you make sense of your feelings without the therapy price tag.
 
 ## Evaluation Criteria Checklist
 
 | # | Criterion | Status | Documentation |
 |---|-----------|--------|---------------|
-| 1 | [Criterion 1 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-1.md] |
-| 2 | [Criterion 2 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-2.md] |
-| 3 | [Criterion 3 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-3.md] |
-| 4 | [Criterion 4 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-4.md] |
-| 5 | [Criterion 5 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-5.md] |
-| 6 | [Criterion 6 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-6.md] |
-| 7 | [Criterion 7 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-7.md] |
+| 1 | Refined Ux | ✅ | [Refined Ux](02-technical/criteria/refined-ux.md) |
+| 2 | Adaptive Ui | ✅ | [Adaptive Ui](02-technical/criteria/adaptive-ui.md) |
+| 3 | Ai Assistant | ✅ | [Ai Assistant](02-technical/criteria/ai-assistant.md) |
+| 4 | Containerization | ✅ | [Containerization](02-technical/criteria/containerization.md) |
+| 5 | Database | ✅ | [Database](02-technical/criteria/database.md) |
+| 6 | Frontend | ✅ | [Frontend](02-technical/criteria/frontend.md) |
+| 7 | Qualitative Testing | ✅ | [Qualitative Testing](02-technical/criteria/qualitative-testing.md) |
 
 ## Documentation Navigation
 
@@ -43,5 +47,5 @@
 
 ---
 
-*Document created: [Date]*
-*Last updated: [Date]*
+*Document created: 04.01.2026*
+*Last updated: 05.01.2026*
