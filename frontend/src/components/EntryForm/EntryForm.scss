@@ -52,7 +52,7 @@
 
   &__textarea {
     font-family: var(--font-handwriting);
-    font-size: 14px;
+    font-size: 16px;
     color: var(--color-dark-blue);
     line-height: 2;
     border: none;
@@ -64,7 +64,6 @@
     }
 
     @include breakpoints.mobile {
-      font-size: 13px;
       line-height: 1.8;
     }
   }
@@ -76,10 +75,6 @@
       margin: 0;
       font-size: 16px;
       color: #000;
-
-      @include breakpoints.mobile {
-        font-size: 14px;
-      }
     }
 
     .highlight {
@@ -157,7 +152,7 @@
   &__emotion-title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 
     .highlight {
       color: var(--color-purple);
@@ -167,10 +162,6 @@
       &:hover {
         text-decoration: underline;
       }
-    }
-
-    @include breakpoints.mobile {
-      font-size: 14px;
     }
   }
 

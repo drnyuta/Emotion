@@ -81,7 +81,11 @@ export const EntryForm = ({
                 onClick={onDeleteQuestion}
                 aria-label="Delete question"
               >
-                <img src={Cross} alt="cross" className="entry-form__question-delete-icon"/>
+                <img
+                  src={Cross}
+                  alt="cross"
+                  className="entry-form__question-delete-icon"
+                />
               </button>
             </div>
           )}
@@ -111,7 +115,7 @@ export const EntryForm = ({
           <div className="entry-form__emotion-section">
             <p className="entry-form__emotion-title">
               <img src={Emoji} alt="emoji" className="entry-form__emoji" />
-              Choose your{" "}
+              Choose your
               <a href="/emotion-wheel" className="highlight">
                 emotions:
               </a>

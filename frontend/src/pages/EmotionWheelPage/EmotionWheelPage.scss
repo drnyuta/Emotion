@@ -15,13 +15,6 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    p {
-      font-size: 18px;
-
-      @media (max-width: 480px) {
-        font-size: 16px;
-      }
-    }
   }
 
   &__description-list {
@@ -32,12 +25,5 @@
 
   &__list {
     margin: 0;
-    li {
-      font-size: 18px;
-
-      @media (max-width: 480px) {
-        font-size: 16px;
-      }
-    }
   }
 }
