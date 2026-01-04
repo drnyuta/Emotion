@@ -17,7 +17,7 @@ app.get('/health', async (_req, res) => {
 });
 
 connectDB().then(() => {
-  app.listen(5000, '0.0.0.0', () => {
+  app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log(`Swagger docs: http://localhost:${PORT}/api-docs`);
   });
