@@ -3,18 +3,72 @@ info:
   title: AI Emotional Support API
   version: 1.0.0
   description: >
-    API for interacting with an AI emotional support assistant.
-    Provides endpoints for chatting with AI and analyzing daily or weekly journal entries.
+    Complete API documentation for an AI emotional support assistant.
+    Provides endpoints for authentication, diary entries, emotions, AI chat, analytics, insights, and streak tracking.
 
 servers:
-  - url: http://localhost:5000/api/ai
+  - url: http://localhost:5000
     description: Local development server
+  - url: https://emotion-production.up.railway.app
+    description: Production server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        message:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+
+tags:
+  - name: Authentication
+    description: User authentication and account management
+  - name: AI
+    description: AI chat and analysis endpoints
+  - name: Diary
+    description: Journal entry management
+  - name: Emotions
+    description: Emotion categories and data
+  - name: Questions
+    description: Prompts for journal entries
+  - name: Insights
+    description: User insights management
+  - name: Analytics
+    description: Emotional analytics and statistics
+  - name: Streak
+    description: Diary entry streak tracking
 
 paths:
-  /chat:
+  # Authentication endpoints
+  /auth/register:
     post:
-      summary: Chat with AI
-      description: Sends a user message to the AI and receives an empathetic, supportive response.
+      tags:
+        - Authentication
+      summary: Register new user
       requestBody:
         required: true
         content:
@@ -22,16 +76,244 @@ paths:
             schema:
               type: object
               required:
-                - userId
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "securePassword123"
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "User registered successfully"
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "securePassword123"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/forgot-password:
+    post:
+      tags:
+        - Authentication
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+      responses:
+        '200':
+          description: Reset token sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                  resetToken:
+                    type: string
+                    description: Only in development
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/reset-password:
+    post:
+      tags:
+        - Authentication
+      summary: Reset password with token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - password
+              properties:
+                token:
+                  type: string
+                  example: "reset-token-string"
+                password:
+                  type: string
+                  format: password
+                  example: "newSecurePassword123"
+      responses:
+        '200':
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Password reset successfully"
+        '400':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/verify:
+    get:
+      tags:
+        - Authentication
+      summary: Verify JWT token
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Token valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  user:
+                    type: object
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/delete-account:
+    delete:
+      tags:
+        - Authentication
+      summary: Delete user account
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Account deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Account successfully deleted"
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # AI endpoints
+  /ai/chat:
+    post:
+      tags:
+        - AI
+      summary: Chat with AI
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
                 - message
               properties:
-                userId:
-                  type: string
-                  description: Unique identifier for the user
-                  example: "user123"
                 message:
                   type: string
-                  description: User's text message
                   example: "I feel sad today."
       responses:
         '200':
@@ -47,7 +329,7 @@ paths:
                         example: true
                       result:
                         type: string
-                        example: "I understand that you're feeling sad. Can you tell me more about why?"
+                        example: "I understand that you're feeling sad. Can you tell me more?"
                   - type: object
                     properties:
                       success:
@@ -61,31 +343,20 @@ paths:
                             example: true
                           message:
                             type: string
-                            example: "It seems like you're in distress. Please contact support immediately."
         '400':
           description: Validation error
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: false
-                  error:
-                    type: string
-                    example: "Message cannot be empty."
-        '429':
-          description: Rate limit exceeded
-        '503':
-          description: Service unavailable
-        '504':
-          description: Timeout
+                $ref: '#/components/schemas/Error'
 
-  /daily-report:
+  /ai/daily-report:
     post:
-      summary: Daily Analysis
-      description: Analyzes a single journal entry to provide emotional insights, triggers, and recommendations.
+      tags:
+        - AI
+      summary: Generate daily analysis report
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -95,95 +366,22 @@ paths:
               required:
                 - entryText
                 - selectedEmotions
+                - entryId
               properties:
                 entryText:
                   type: string
-                  description: Journal entry text
                   example: "I felt stressed today because of work deadlines."
                 selectedEmotions:
                   type: array
                   items:
                     type: string
-                  description: List of user-selected emotions
                   example: ["stress", "anxiety"]
+                entryId:
+                  type: integer
+                  example: 123
       responses:
         '200':
           description: Daily analysis result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      success:
-                        type: boolean
-                        example: true
-                      result:
-                        type: object
-                        properties:
-                          detectedEmotions:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                emotion:
-                                  type: string
-                                explanation:
-                                  type: string
-                          emotionComparison:
-                            type: object
-                            properties:
-                              userSelected:
-                                type: array
-                                items:
-                                  type: string
-                              matchLevel:
-                                type: string
-                                enum: [fully, partially, doesNotMatch]
-                              additionalEmotions:
-                                type: array
-                                items:
-                                  type: string
-                              explanation:
-                                type: string
-                          mainTriggers:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                title:
-                                  type: string
-                                description:
-                                  type: string
-                          insights:
-                            type: array
-                            items:
-                              type: string
-                          recommendations:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                action:
-                                  type: string
-                                description:
-                                  type: string
-                  - type: object
-                    properties:
-                      success:
-                        type: boolean
-                        example: true
-                      result:
-                        type: object
-                        properties:
-                          crisis:
-                            type: boolean
-                            example: true
-                          message:
-                            type: string
-                            example: "It seems like you're in distress. Please contact support immediately."
-        '400':
-          description: Validation error
           content:
             application/json:
               schema:
@@ -191,21 +389,47 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    example: false
-                  error:
-                    type: string
-                    example: "Entry cannot be empty."
-        '429':
-          description: Rate limit exceeded
-        '503':
-          description: Service unavailable
-        '504':
-          description: Timeout
+                    example: true
+                  report:
+                    type: object
+                    properties:
+                      detectedEmotions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            emotion:
+                              type: string
+                            explanation:
+                              type: string
+                      emotionComparison:
+                        type: object
+                      mainTriggers:
+                        type: array
+                        items:
+                          type: object
+                      insights:
+                        type: array
+                        items:
+                          type: string
+                      recommendations:
+                        type: array
+                        items:
+                          type: object
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-  /weekly-analysis:
+  /ai/weekly-report:
     post:
-      summary: Weekly Analysis
-      description: Generates a full weekly report based on multiple journal entries.
+      tags:
+        - AI
+      summary: Generate weekly analysis report
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -238,88 +462,68 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    description: Full weekly report
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  report:
+                    type: object
                     properties:
-                      success:
-                        type: boolean
-                        example: true
-                      result:
-                        type: object
-                        properties:
-                          dominantEmotion:
-                            type: string
-                          mainTrigger:
-                            type: string
-                          overview:
-                            type: string
-                          recurringPatterns:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                title:
-                                  type: string
-                                description:
-                                  type: string
-                          recommendations:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                action:
-                                  type: string
-                                description:
-                                  type: string
-                  - type: object
-                    description: Limited weekly report (entries < MIN_WEEKLY_ENTRIES)
-                    properties:
-                      success:
-                        type: boolean
-                        example: true
-                      result:
-                        type: object
-                        properties:
-                          limitedData:
-                            type: boolean
-                            example: true
-                          detectedEmotions:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                emotion:
-                                  type: string
-                                explanation:
-                                  type: string
-                          mainTriggers:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                title:
-                                  type: string
-                                explanation:
-                                  type: string
-                          insights:
-                            type: array
-                            items:
-                              type: string
-                          recommendations:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                action:
-                                  type: string
-                                description:
-                                  type: string
-                          note:
-                            type: string
-                            example: "You have 2 entries which leads to a limited analysis. Full weekly analysis requires at least 3 entries."
+                      dominantEmotion:
+                        type: string
+                      mainTrigger:
+                        type: string
+                      overview:
+                        type: string
+                      recurringPatterns:
+                        type: array
+                        items:
+                          type: object
+                      recommendations:
+                        type: array
+                        items:
+                          type: object
         '400':
           description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ai/reports:
+    get:
+      tags:
+        - AI
+      summary: Get all reports with filters
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [daily, weekly]
+          description: Filter by report type
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [newest, oldest]
+          description: Sort order
+        - name: year
+          in: query
+          schema:
+            type: integer
+          description: Filter by year
+        - name: month
+          in: query
+          schema:
+            type: integer
+          description: Filter by month (1-12)
+      responses:
+        '200':
+          description: List of reports
           content:
             application/json:
               schema:
@@ -327,13 +531,807 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    example: false
-                  error:
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ai/reports/{id}:
+    delete:
+      tags:
+        - AI
+      summary: Delete a report
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Report ID
+      responses:
+        '200':
+          description: Report deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
                     type: string
-                    example: "Entries must be an array."
-        '429':
-          description: Rate limit exceeded
-        '503':
-          description: Service unavailable
-        '504':
-          description: Timeout
+                    example: "Report deleted successfully"
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Diary endpoints
+  /diary/month-dates:
+    get:
+      tags:
+        - Diary
+      summary: Get dates with entries for a month
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2025
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: List of dates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  dates:
+                    type: array
+                    items:
+                      type: string
+                      format: date
+                    example: ["2025-01-01", "2025-01-03", "2025-01-05"]
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /diary/entry:
+    get:
+      tags:
+        - Diary
+      summary: Get entry by date
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: entry_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2025-01-04"
+      responses:
+        '200':
+          description: Entry details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  entry:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      userId:
+                        type: integer
+                      entryDate:
+                        type: string
+                        format: date
+                      content:
+                        type: string
+                      questionId:
+                        type: integer
+                        nullable: true
+                      emotions:
+                        type: array
+                        items:
+                          type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Diary
+      summary: Create new diary entry
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - entryDate
+                - content
+                - emotions
+              properties:
+                entryDate:
+                  type: string
+                  format: date
+                  example: "2025-01-04"
+                content:
+                  type: string
+                  example: "Today was a good day..."
+                questionId:
+                  type: integer
+                  nullable: true
+                  example: 1
+                emotions:
+                  type: array
+                  items:
+                    type: string
+                  example: ["happy", "grateful"]
+      responses:
+        '200':
+          description: Entry created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  entry:
+                    type: object
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /diary/entry/{id}:
+    put:
+      tags:
+        - Diary
+      summary: Update diary entry
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Entry ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: "Updated content..."
+                questionId:
+                  type: integer
+                  nullable: true
+                emotions:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Entry updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  entry:
+                    type: object
+        '404':
+          description: Entry not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Diary
+      summary: Delete diary entry
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Entry ID
+      responses:
+        '200':
+          description: Entry deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Entry deleted"
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Emotions endpoints
+  /emotions/categories:
+    get:
+      tags:
+        - Emotions
+      summary: Get all emotion categories with emotions
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        emotions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              name:
+                                type: string
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /emotions/{id}:
+    get:
+      tags:
+        - Emotions
+      summary: Get emotion by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Emotion ID
+      responses:
+        '200':
+          description: Emotion details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  emotion:
+                    type: object
+        '404':
+          description: Emotion not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Questions endpoints
+  /questions:
+    get:
+      tags:
+        - Questions
+      summary: Get all journal prompts
+      responses:
+        '200':
+          description: List of questions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  questions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        text:
+                          type: string
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /questions/{id}:
+    get:
+      tags:
+        - Questions
+      summary: Get question by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Question ID
+      responses:
+        '200':
+          description: Question details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  question:
+                    type: object
+        '404':
+          description: Question not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Insights endpoints
+  /insights:
+    get:
+      tags:
+        - Insights
+      summary: Get all user insights
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of insights
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        userId:
+                          type: integer
+                        insightText:
+                          type: string
+                        insightDate:
+                          type: string
+                          format: date
+                        createdAt:
+                          type: string
+                          format: date-time
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Insights
+      summary: Create new insight
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - insightText
+                - insightDate
+              properties:
+                insightText:
+                  type: string
+                  example: "I noticed I'm happier when I spend time outdoors"
+                insightDate:
+                  type: string
+                  format: date
+                  example: "2025-01-04"
+      responses:
+        '200':
+          description: Insight created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /insights/{id}:
+    put:
+      tags:
+        - Insights
+      summary: Update insight
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Insight ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - insightText
+              properties:
+                insightText:
+                  type: string
+                  example: "Updated insight text"
+      responses:
+        '200':
+          description: Insight updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+        '404':
+          description: Insight not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Insights
+      summary: Delete insight
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Insight ID
+      responses:
+        '200':
+          description: Insight deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Insight deleted"
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Analytics endpoints
+  /analytics/monthly:
+    get:
+      tags:
+        - Analytics
+      summary: Get monthly emotion statistics
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2025
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Monthly statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  stats:
+                    type: object
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /analytics/weekly:
+    get:
+      tags:
+        - Analytics
+      summary: Get weekly emotion statistics
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2025
+        - name: week
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Weekly statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  stats:
+                    type: object
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Streak endpoints
+  /streak/current:
+    get:
+      tags:
+        - Streak
+      summary: Get current streak
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current streak
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  streak:
+                    type: object
+                    nullable: true
+                    properties:
+                      currentStreak:
+                        type: integer
+                        example: 5
+                      startDate:
+                        type: string
+                        format: date
+                      lastEntryDate:
+                        type: string
+                        format: date
+                  message:
+                    type: string
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /streak/history:
+    get:
+      tags:
+        - Streak
+      summary: Get streak history
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Streak history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  history:
+                    type: array
+                    items:
+                      type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /streak/longest:
+    get:
+      tags:
+        - Streak
+      summary: Get longest streak
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Longest streak
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  longestStreak:
+                    type: object
+                    properties:
+                      streak:
+                        type: integer
+                        example: 15
+                      startDate:
+                        type: string
+                        format: date
+                      endDate:
+                        type: string
+                        format: date
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /streak/status:
+    get:
+      tags:
+        - Streak
+      summary: Check streak status
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Streak status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  streak:
+                    type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
