@@ -38,17 +38,14 @@ app.use("/insights", authMiddleware, insightRoutes);
 app.use("/analytics", authMiddleware, analyticsRoutes);
 app.use("/streak", authMiddleware, streakRoutes);
 
-const NODE_ENV = process.env.NODE_ENV || "development";
+try {
+  const swaggerPath = path.join(process.cwd(), "swagger.yaml");
+  const swaggerDocument = YAML.load(swaggerPath);
 
-if (NODE_ENV !== "production") {
-  try {
-    const swaggerPath = path.join(__dirname, "../swagger.yaml");
-    const swaggerDocument = YAML.load(swaggerPath);
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    console.log("Swagger docs available at /api-docs");
-  } catch (err) {
-    console.warn("Swagger.yaml not found, skipping Swagger setup");
-  }
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  console.log("Swagger available at /api-docs");
+} catch (err) {
+  console.warn("Swagger.yaml not found, Swagger disabled");
 }
 
 app.use(errorLogger);
