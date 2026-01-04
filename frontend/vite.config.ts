@@ -9,15 +9,21 @@ export default defineConfig({
     strictPort: true,
     watch: {
       usePolling: true,
-    },
-    proxy: {
-      '/api': {
-        target: 'http://backend:5000',
-        changeOrigin: true
-      }
     }
   },
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        }
+      }
+    }
+  },
+  preview: {
+    port: 5173,
+    strictPort: true,
   }
 })
