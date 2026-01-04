@@ -5,6 +5,13 @@ import "./WelcomePage.scss";
 
 export const WelcomePage = () => {
   const navigate = useNavigate();
+
+  const handleStart = () => {
+    localStorage.setItem("hasVisitedBefore", "true");
+    
+    navigate("/login");
+  };
+
   return (
     <div className="welcome-page">
       <div className="welcome-page__content">
@@ -17,10 +24,10 @@ export const WelcomePage = () => {
           Here you can observe your feelings, reflect on your day, and
           understand yourself a little deeper.
         </p>
-        <p>Let’s begin your journey toward emotional clarity.</p>
+        <p>Let's begin your journey toward emotional clarity.</p>
         <Button
           text="Start exploring"
-          onClick={() => navigate("/diary")}
+          onClick={handleStart}
           variant="blue"
           size="large"
           fullWidth={false}

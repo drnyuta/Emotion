@@ -24,6 +24,8 @@ import { SignUpForm } from "./components/auth/SignUpForm/SignUpForm";
 import { RecoverPasswordForm } from "./components/auth/RecoverPasswordForm/RecoverPasswordForm";
 import { ResetPasswordForm } from "./components/auth/ResetPasswordForm/ResetPasswordForm";
 import { AccountPage } from "./pages/AccountPage/AccountPage";
+import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
+import { WelcomeGuard } from "./components/WelcomeGuard/WelcomeGuard";
 
 export const App: React.FC = () => {
   return (
@@ -36,46 +38,55 @@ export const App: React.FC = () => {
     >
       <AuthProvider>
         <Router>
-          <Routes>
-            <Route path="/welcome" element={<WelcomePage />} />
-            <Route path="*" element={<NotFound />} />
+          <WelcomeGuard>
+            <Routes>
+              <Route path="/welcome" element={<WelcomePage />} />
 
-            <Route element={<PlainLayout />}>
-              <Route path="/login" element={<LogInForm />} />
-              <Route path="/signup" element={<SignUpForm />} />
-              <Route
-                path="/recover-password"
-                element={<RecoverPasswordForm />}
-              />
-              <Route path="/reset-password" element={<ResetPasswordForm />} />
-              <Route
-                path="/reset-password/email-confirmation"
-                element={<EmailSent />}
-              />
-            </Route>
+              <Route element={<PlainLayout />}>
+                <Route path="/login" element={<LogInForm />} />
+                <Route path="/signup" element={<SignUpForm />} />
+                <Route
+                  path="/recover-password"
+                  element={<RecoverPasswordForm />}
+                />
+                <Route path="/reset-password" element={<ResetPasswordForm />} />
+                <Route
+                  path="/reset-password/email-confirmation"
+                  element={<EmailSent />}
+                />
+              </Route>
 
-            <Route element={<Layout />}>
-              <Route path="/" element={<DiaryPage />} />
-              <Route path="/diary/new" element={<CreateEntryPage />} />
-              <Route path="/diary/edit" element={<EditEntryPage />} />
-              <Route path="/emotion-wheel" element={<EmotionWheelPage />} />
               <Route
-                path="/emotions/:categoryName"
-                element={<EmotionAccordeonPage />}
-              />
-              <Route path="/questions" element={<QuestionsPage />} />
-              <Route
-                path="/diary/from-question"
-                element={<DiaryFromQuestionPage />}
-              />
-              <Route path="/smart-chat" element={<SmartChatPage />} />
-              <Route path="/reports" element={<AiReportsPage />} />
-              <Route path="/reports/:id" element={<ReportDetailPage />} />
-              <Route path="/insights" element={<InsightsPage />} />
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/account" element={<AccountPage />} />
-            </Route>
-          </Routes>
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="/" element={<DiaryPage />} />
+                <Route path="/diary/new" element={<CreateEntryPage />} />
+                <Route path="/diary/edit" element={<EditEntryPage />} />
+                <Route path="/emotion-wheel" element={<EmotionWheelPage />} />
+                <Route
+                  path="/emotions/:categoryName"
+                  element={<EmotionAccordeonPage />}
+                />
+                <Route path="/questions" element={<QuestionsPage />} />
+                <Route
+                  path="/diary/from-question"
+                  element={<DiaryFromQuestionPage />}
+                />
+                <Route path="/smart-chat" element={<SmartChatPage />} />
+                <Route path="/reports" element={<AiReportsPage />} />
+                <Route path="/reports/:id" element={<ReportDetailPage />} />
+                <Route path="/insights" element={<InsightsPage />} />
+                <Route path="/analytics" element={<AnalyticsPage />} />
+                <Route path="/account" element={<AccountPage />} />
+              </Route>
+
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </WelcomeGuard>
         </Router>
       </AuthProvider>
     </ConfigProvider>

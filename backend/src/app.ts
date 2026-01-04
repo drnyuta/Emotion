@@ -38,7 +38,6 @@ app.use("/insights", authMiddleware, insightRoutes);
 app.use("/analytics", authMiddleware, analyticsRoutes);
 app.use("/streak", authMiddleware, streakRoutes);
 
-
 const NODE_ENV = process.env.NODE_ENV || "development";
 
 if (NODE_ENV !== "production") {
