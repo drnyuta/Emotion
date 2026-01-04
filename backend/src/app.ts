@@ -5,10 +5,10 @@ import YAML from "yamljs";
 import path from "path";
 import aiRoutes from "./routes/ai.routes";
 import diaryRoutes from "./routes/diary";
-import emotionRoutes from "./routes/emotion"
-import questionRoutes from "./routes/question"
-import insightRoutes from "./routes/insights"
-import analyticsRoutes from "./routes/analytics"
+import emotionRoutes from "./routes/emotion";
+import questionRoutes from "./routes/question";
+import insightRoutes from "./routes/insights";
+import analyticsRoutes from "./routes/analytics";
 import authRoutes from "./routes/auth";
 import streakRoutes from "./routes/streak";
 import { errorLogger } from "./middleware/errorLogger";
@@ -38,8 +38,10 @@ app.use("/insights", authMiddleware, insightRoutes);
 app.use("/analytics", authMiddleware, analyticsRoutes);
 app.use("/streak", authMiddleware, streakRoutes);
 
-const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+if (process.env.NODE_ENV !== "production") {
+  const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"));
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 
 app.use(errorLogger);
 
