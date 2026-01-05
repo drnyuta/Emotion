@@ -4,34 +4,12 @@
 
 | Attribute | Value |
 |-----------|-------|
-| **Database** | [PostgreSQL/MySQL/MongoDB/etc.] |
-| **Version** | [X.X] |
-| **ORM** | [Prisma/TypeORM/Sequelize/etc.] |
+| **Database** | PostgreSQL |
+| **Version** | 16 |
 
 ## Entity Relationship Diagram
 
-```
-┌─────────────────┐       ┌─────────────────┐
-│     [Table1]    │       │     [Table2]    │
-├─────────────────┤       ├─────────────────┤
-│ id (PK)         │───┐   │ id (PK)         │
-│ [field]         │   │   │ [field]         │
-│ [field]         │   └──▶│ [table1_id] (FK)│
-│ created_at      │       │ created_at      │
-└─────────────────┘       └─────────────────┘
-         │
-         │ 1:N
-         ▼
-┌─────────────────┐
-│     [Table3]    │
-├─────────────────┤
-│ id (PK)         │
-│ [table1_id] (FK)│
-│ [field]         │
-└─────────────────┘
-```
-
-[Or link to diagram in assets/diagrams/]
+![DB Schema](../assets/diagrams/db_schema.png)
 
 ## Tables
 
