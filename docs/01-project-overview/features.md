@@ -8,8 +8,8 @@
 | E2: Emotion Journal | Daily journaling with emotion tracking and AI analysis | 4 | ✅ |
 | E3: Educational Section | Emotion wheel and emotional literacy resources | 1 | ✅ |
 | E4: Statistics Dashboard | Visual analytics and emotion trend analysis | 3 | ✅ |
-| E5: Weekly AI Reports | Automated AI-driven emotional pattern analysis | 2 | ✅ |
-| E6: Gamification ("Spark") | Daily streak tracking to encourage consistent journaling | 1 | ✅ |
+| E5: Ai Assistant | Automated AI-driven emotional pattern analysis | 5 | ⚠️ |
+| E6: Gamification ("Spark") | Daily streak tracking to encourage consistent journaling | 1 | ⚠️ |
 | E7: Insights Collection | Personal library for saving meaningful AI-generated insights | 1 | ✅ |
 | E8: Question of the Day | Reflective prompts to inspire journal entries | 1 | ✅ |
 
@@ -55,14 +55,17 @@ Visual analytics to help users identify emotional patterns and trends.
 | US-4.2 | As a user, I want to see my predominant emotion for a selected period, so that I can identify my mood trends | - Correct emotion highlighted for selected period<br>- Updates automatically when date filter changes<br>- Predominant emotion determined by highest count | Should | ✅ |
 | US-4.3 | As a user, I want to filter my statistics by day, week, or month, so that I can analyze short-term or long-term patterns | - Charts update correctly based on filter<br>- Predominant emotion recalculates for period<br>- Works without page reload<br>- Supports day, week, and month periods | Should | ✅ |
 
-### Epic 5: Weekly AI Reports
+### Epic 5: Ai Assistant
 
 Automated AI-driven analysis to reveal emotional patterns, triggers, and recommendations.
 
 | ID | User Story | Acceptance Criteria | Priority | Status |
 |----|------------|---------------------|----------|--------|
-| US-5.1 | As a user, I want the system to generate a weekly report analyzing my emotional patterns, so that I can understand triggers, trends, and mood fluctuations | - Report generates based on week's entries<br>- Contains detected triggers and patterns<br>- Provides personalized recommendations<br>- Report data matches actual entries<br>- Displayed clearly in frontend UI | Should | ✅ |
+| US-5.1 | As a user, I want the system to generate a weekly report analyzing my emotional patterns, so that I can understand triggers, trends, and mood fluctuations | - Report generates based on week's entries<br>- Contains detected triggers and patterns<br>- Provides personalized recommendations<br>- Report data matches actual entries<br>- Displayed clearly in frontend UI | Should | ⚠️ |
 | US-5.2 | As a user, I want to access past weekly reports, so that I can track my emotional trends over time | - User can see all past reports for their account<br>- Reports listed chronologically<br>- Selecting a report displays full content<br>- Only logged-in user's reports visible<br>- Can delete old reports | Should | ✅ |
+| US-5.3 | As a user, I want the system to generate daily AI reports analyzing my journal entries, so that I can track my emotions and get actionable insights | - Daily report generated based on that day's journal entries<br>- Includes detected emotions, emotional triggers, and personalized insights<br>- Report is displayed clearly in the UI<br>- Users can revisit daily reports at any time<br>- Only the logged-in user's data is visible | Should | ✅ |
+| US-5.4 | As a user, I want to access past daily reports, so that I can track my emotional trends over time | - User can see all past reports for their account<br>- Reports listed chronologically<br>- Selecting a report displays full content<br>- Only logged-in user's reports visible<br>- Can delete old reports | Should | ✅ |
+| US-5.5 | As a user, I want to chat with an AI assistant, so that I can reflect on my thoughts and emotions and receive empathetic guidance|- User can open Smart Chat and send messages<br>- AI responds with empathetic feedback, reflection prompts, or advice<br>- Conversation history is saved per user<br>- AI can reference previous messages to provide contextual responses | Should | ✅ |
 
 ### Epic 6: "Spark" Gamification
 
@@ -70,7 +73,7 @@ Streak tracking to motivate consistent journaling habits.
 
 | ID | User Story | Acceptance Criteria | Priority | Status |
 |----|------------|---------------------|----------|--------|
-| US-6.1 | As a user, I want to see my journaling streak displayed as a "spark" icon, so that I stay motivated to write every day | - Streak increases by 1 for consecutive days<br>- Streak resets if no entry for 24+ hours<br>- Spark icon updates based on streak value<br>- Data persists between sessions<br>- Displays current streak count<br>- Shows longest streak achieved | Could | ✅ |
+| US-6.1 | As a user, I want to see my journaling streak displayed as a "spark" icon, so that I stay motivated to write every day | - Streak increases by 1 for consecutive days<br>- Streak resets if no entry for 24+ hours<br>- Spark icon updates based on streak value<br>- Data persists between sessions<br>- Displays current streak count<br>- Shows longest streak achieved | Could | ⚠️ |
 
 ### Epic 7: Insights Collection
 
