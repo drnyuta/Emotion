@@ -12,58 +12,81 @@ This section provides instructions for end users on how to use the application.
 ### System Requirements
 
 | Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| **Browser** | [Chrome 90+, Firefox 88+, Safari 14+] | [Latest version] |
-| **Screen Resolution** | [1280x720] | [1920x1080] |
-| **Internet** | [Required/Optional] | - |
-| **Device** | [Desktop/Mobile/Both] | - |
+|------------|---------|-------------|
+| **Browser** | Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ | Latest version |
+| **Screen Resolution** | Mobile: 350px | 1280×720 |
+| **Internet** | Required | Stable broadband connection |
+| **Device** | Mobile / Tablet / Desktop | Desktop or Tablet |
 
 ### Accessing the Application
 
 1. Open your web browser
-2. Navigate to: **[Application URL]**
-3. [Additional access instructions if needed]
+2. Navigate to: **https://emotion-amber.vercel.app**
+3. You will be redirected to the login page if not authenticated
 
-### First Launch
+## First Launch
 
-#### Step 1: [Registration/Login]
+### Welcome Screen
 
-[Screenshot placeholder: `![Login Screen](../assets/images/login.png)`]
+![Welcome Screen](../assets/images/welcome.png)
 
-1. [Action 1]
-2. [Action 2]
-3. [Action 3]
+On first launch, users see a welcome screen briefly explaining the purpose of the application
 
-#### Step 2: [Initial Setup]
+Click **Start exploring** to continue.
 
-[Screenshot placeholder: `![Setup Screen](../assets/images/setup.png)`]
+### Step 1: Registration / Login
 
-1. [Configure setting 1]
-2. [Configure setting 2]
-3. Click **[Button Name]** to continue
+![Sign Up Screen](../assets/images/login.png)
 
-#### Step 3: [Main Dashboard]
+1. Click **Register** to create a new account
+2. Enter email and password (minimum 8 characters, a capital letter and a number)
+3. Click **Create Account**
+4. Existing users can log in using **Log In**
 
-[Screenshot placeholder: `![Dashboard](../assets/images/dashboard.png)`]
+If the password is forgotten, use **Forgot Password** to reset it via email.
 
-After setup, you will see the main dashboard with:
-- [Element 1]: [Description]
-- [Element 2]: [Description]
-- [Element 3]: [Description]
+### Step 2: First Journal Entry
+
+![Diary Screen](../assets/images/diary.png)
+
+After successful login, the user is redirected directly to the **Diary page**.
+
+1. Write your first journal entry in the text area
+2. Select one or more emotions that match your current state
+3. Click **Save**
+
+This first entry initializes emotion tracking and statistics.
+
+### Step 3: AI Analysis
+
+![AI Analysis](../assets/images/ai-report.png)
+
+After saving an entry:
+
+1. Click **Analyze with AI** inside the diary entry
+2. The system sends the text to the AI service
+3. An AI-generated report is displayed, including:
+   - Detected emotions
+   - Comparison to the emotions you selected
+   - Emotional triggers
+   - Emotional insights
+   - Recommendations
+
+Reports are saved and can be revisited later.
 
 ## Quick Start Guide
 
 | Task | How To |
-|------|--------|
-| [Common task 1] | [Brief instruction] |
-| [Common task 2] | [Brief instruction] |
-| [Common task 3] | [Brief instruction] |
-| [Common task 4] | [Brief instruction] |
+|-----|--------|
+| Create first entry | Diary → Write text → Select emotions → Save |
+| Analyze emotions | Open entry → Analyze with AI |
+| View weekly/monthly stats | Analytics → Select Week or Month |
+| Learn emotions | Emotion Wheel → Choose emotion |
+| Keep streak | Write at least one entry per day |
 
 ## User Roles
 
 | Role | Permissions | Access Level |
-|------|-------------|--------------|
-| **[Role 1]** | [What they can do] | [Full/Limited/Read-only] |
-| **[Role 2]** | [What they can do] | [Full/Limited/Read-only] |
-| **[Role 3]** | [What they can do] | [Full/Limited/Read-only] |
+|-----|-------------|--------------|
+| **User** | Full access to journaling, analytics, AI reports, insights | Full |
+| **Superuser (Developer)** | System configuration, debugging, monitoring | Internal |

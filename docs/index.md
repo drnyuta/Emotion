@@ -7,7 +7,7 @@
 | **Student** | Hanna Drozhdzh |
 | **Group** | 22-HR-JS |
 | **Supervisor** | Yahor Bialiauski |
-| **Date** | 05.01.2026 |
+| **Date** | 2026-01-05 |
 
 ## Links
 
