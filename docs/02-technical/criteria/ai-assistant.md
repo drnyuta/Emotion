@@ -265,6 +265,7 @@ Safety behavior:
 
 ## References
 
+- [Ai Assistant Specification](https://drive.google.com/drive/folders/1RMGFrAhLpTO3F8-BLM-xrxHNZjWjPXUS?dmr=1&ec=wgc-drive-hero-goto)
 - [Google Gemini API Documentation](https://ai.google.dev/docs)
 - [Prompt Engineering Guide](https://www.promptingguide.ai/)
 - [Backend AI Service Implementation](https://github.com/drnyuta/Emotion/blob/docs/backend/src/services/ai.service.ts)

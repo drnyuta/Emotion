@@ -117,3 +117,6 @@ $$ LANGUAGE plpgsql;
 | Synchronous triggers | Slight latency on bulk updates | Asynchronous logging or audit tables |
 | Fixed question set | No user-generated prompts | Add `user_id` to questions |
  
+## References
+
+- [Database Specification](https://drive.google.com/drive/folders/1RMGFrAhLpTO3F8-BLM-xrxHNZjWjPXUS?dmr=1&ec=wgc-drive-hero-goto)

@@ -291,8 +291,8 @@ services:
 
 ## References
 
+- [Docker Specification](https://drive.google.com/drive/folders/1RMGFrAhLpTO3F8-BLM-xrxHNZjWjPXUS?dmr=1&ec=wgc-drive-hero-goto)
 - [Docker Documentation](https://docs.docker.com/)
-- [Docker Compose File Reference](https://docs.docker.com/compose/compose-file/)
 - [Multi-Stage Builds Best Practices](https://docs.docker.com/build/building/multi-stage/)
 - [Node.js Docker Best Practices](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md)
 - [PostgreSQL Docker Hub](https://hub.docker.com/_/postgres)

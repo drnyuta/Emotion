@@ -95,3 +95,7 @@ The UX is designed to feel supportive and predictable, reducing cognitive load w
 | Limited personalization | Reduced sense of ownership and long-term engagement | Add user settings, preferences, and customizable UI |
 | No offline support | Users cannot journal without an internet connection | Implement local storage with background sync |
 | Fixed emotion set | Less emotional nuance for some users | Allow custom emotion tags or user-defined emotions |
+
+## References
+
+- [Ux Design Specification](https://drive.google.com/drive/folders/1RMGFrAhLpTO3F8-BLM-xrxHNZjWjPXUS?dmr=1&ec=wgc-drive-hero-goto)

@@ -206,6 +206,7 @@ const handleSave = async () => {
 
 ## References
 
+- [Frontend Specification](https://drive.google.com/drive/folders/1RMGFrAhLpTO3F8-BLM-xrxHNZjWjPXUS?dmr=1&ec=wgc-drive-hero-goto)
 - [React Documentation](https://react.dev/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 - [Ant Design Components](https://ant.design/components/overview/)
