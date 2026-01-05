@@ -111,38 +111,6 @@ frontend/
 
 ### Code Examples
 
-**Responsive SCSS Mixin:**
-```scss
-// styles/variables/_breakpoints.scss
-$mobile: 480px;
-$tablet: 980px;
-
-@mixin mobile {
-  @media (max-width: $mobile) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (max-width: $tablet) {
-    @content;
-  }
-}
-
-// Usage in component
-.sidebar {
-  width: 280px;
-
-  @include tablet {
-    width: 80px; // Icon-only
-  }
-
-  @include mobile {
-    display: none; // Hidden, burger menu
-  }
-}
-```
-
 **Authentication Context:**
 ```typescript
 // context/AuthContext.tsx

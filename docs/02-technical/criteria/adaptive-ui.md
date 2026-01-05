@@ -1,4 +1,4 @@
-# Criterion: Adaptive Ui
+# Criterion: Adaptive UI
 
 ## Architecture Decision Record
 
@@ -6,80 +6,89 @@
 
 **Status:** Accepted
 
-**Date:** 2026-01-04
+**Date:** 2025-01-05
 
 ### Context
 
-[Describe the problem or requirement this criterion addresses. What forces are at play? What constraints exist?]
+The Emotion Diary application targets users across multiple devices (desktop, tablet, mobile) with varying screen sizes and interaction patterns. Users need to journal on-the-go (mobile), during focused work sessions (desktop), or in relaxed settings (tablet). The UI must adapt seamlessly to each context while maintaining visual consistency, usability, and accessibility. A single, rigid design would compromise user experience on smaller screens or fail to leverage larger displays effectively.
 
 ### Decision
 
-[Describe the solution chosen. What approach did you take to satisfy this criterion?]
+Implement a **responsive design** using **SCSS breakpoints** (480px, 980px), **Figma design system** with device-specific layouts, and **reusable components** with adaptive behavior. The design uses three distinct breakpoints (mobile ≤480px, tablet 481-980px, desktop >980px) with components that automatically adjust layout, spacing, and interaction patterns based on screen size.
 
 ### Alternatives Considered
 
 | Alternative | Pros | Cons | Why Not Chosen |
 |-------------|------|------|----------------|
-| [Option 1] | [Benefits] | [Drawbacks] | [Reason for rejection] |
-| [Option 2] | [Benefits] | [Drawbacks] | [Reason for rejection] |
-| [Option 3] | [Benefits] | [Drawbacks] | [Reason for rejection] |
+| Separate mobile app (React Native) | Native performance, platform-specific UX | Requires separate codebase, double maintenance, slower development | Limited development resources, web-first approach more feasible for MVP |
+| Desktop-only design | Simpler development, no responsive complexity | Excludes mobile users (40%+ of target audience), poor accessibility | Target users journal on-the-go, mobile support essential |
 
 ### Consequences
 
 **Positive:**
-- [Benefit 1]
-- [Benefit 2]
-- [Benefit 3]
+- **Cross-Device Accessibility:** Users can journal on any device without feature limitations
+- **Consistent Experience:** Design system ensures visual coherence across breakpoints
+- **Component Reusability:** Single codebase supports all screen sizes with conditional rendering
+- **Future-Proof:** Easy to add new breakpoints (e.g., large desktop, foldable devices)
+- **Design-Dev Alignment:** Figma components mirror React components for seamless handoff
 
 **Negative:**
-- [Drawback 1]
-- [Drawback 2]
+- **Increased Complexity:** More test cases (3 breakpoints × multiple components)
+- **Design Time:** Requires designing 3 versions of every screen in Figma
+- **Edge Cases:** Unusual screen sizes (foldables, ultrawide) may need special handling
 
 **Neutral:**
-- [Observation that is neither positive nor negative]
+- CSS complexity higher than single-layout design but manageable with SCSS mixins
+- Some features better suited to specific devices (e.g., analytics charts on desktop)
 
 ## Implementation Details
 
-### Project Structure
+### Design System Structure
 
 ```
-src/
-├── [folder]/           # [Description]
-│   ├── [file]          # [Description]
-│   └── [file]          # [Description]
-├── [folder]/           # [Description]
-└── ...
+Figma/
+├── Design System/
+│   ├── Colors/                    # Brand colors, semantic colors, states
+│   ├── Typography/                # Font families, sizes, weights
+│   ├── Icons/                     # Custom SVG icons + Ant Design icons
+│   ├── Components/                # Reusable UI elements
+│   │   ├── Buttons
+│   │   ├── Input Fields (Text, Textarea, Date)
+│   │   ├── Cards (Entry, Report, Insight)
+│   │   ├── Modals
+│   │   ├── Navigation (Sidebar, Header)
+│   │   └── Emotion Selector
+│
+├── Layouts/
+│   ├── Desktop (>980px)/
+│   │   ├── Sidebar: 280px full width
+│   ├── Tablet (481-980px)/
+│   │   ├── Sidebar: 80px icons-only
+│   └── Mobile (≤480px)/
+│       ├── Hidden sidebar (burger menu)
 ```
 
 ### Key Implementation Decisions
 
 | Decision | Rationale |
 |----------|-----------|
-| [Decision 1] | [Why this approach] |
-| [Decision 2] | [Why this approach] |
-| [Decision 3] | [Why this approach] |
-
-### Code Examples
-
-[Optional: Include key code snippets that demonstrate the implementation]
-
-```[language]
-// [Description of what this code does]
-[code snippet]
-```
-
-### Diagrams
-
-[Link to relevant diagrams in assets/diagrams/ or include inline]
+| **Three Breakpoints Only** | Balances flexibility with maintainability; covers 95%+ of devices |
+| **Figma Component Library** | Ensures design-dev consistency; components designed once, reused across breakpoints |
+| **SCSS Mixins for Breakpoints** | DRY principle; centralized breakpoint logic easy to update |
+| **Icon-Only Sidebar on Tablet** | Saves horizontal space while maintaining quick navigation access |
+| **Conditional Rendering** | Hide/show features based on screen size (e.g., collapse emotion details on mobile) |
 
 ## Requirements Checklist
 
 | # | Requirement | Status | Evidence/Notes |
 |---|-------------|--------|----------------|
-| 1 | [Requirement from criterion rubric] | ✅ | [Where/how implemented] |
-| 2 | [Requirement from criterion rubric] | ✅ | [Where/how implemented] |
-| 3 | [Requirement from criterion rubric] | ⚠️ | [Partial implementation details] |
-| 4 | [Requirement from criterion rubric] | ❌ | [Why not implemented] |
+| 1 | Three distinct breakpoints (mobile, tablet, desktop) | ✅ | SCSS mixins at 480px, 980px |
+| 2 | Consistent design system across breakpoints | ✅ | Figma design system with colors, typography, components |
+| 3 | Component library with reusable elements | ✅ | Custom components + Ant Design components |
+| 4 | Touch-friendly targets on mobile (≥44px) | ✅ | Buttons, inputs meet touch target minimum |
+| 5 | Adaptive layouts (stacked on mobile, multi-column on desktop) | ✅ | Entry form, analytics, emotion selector adapt |
+| 6 | Icon library for visual consistency | ✅ | Custom SVG icons + Ant Design icons |
+| 7 | Tested across devices | ⚠️ | Chrome DevTools, physical devices (iPhone, iPad, laptop) |
 
 **Legend:**
 - ✅ Fully implemented
@@ -90,11 +99,9 @@ src/
 
 | Limitation | Impact | Potential Solution |
 |------------|--------|-------------------|
-| [Limitation 1] | [How it affects the system] | [How it could be fixed] |
-| [Limitation 2] | [How it affects the system] | [How it could be fixed] |
+| No support for extreme screen sizes (<320px, >2560px) | Layout may break on very small or ultra-wide displays | Add additional breakpoints; test on edge-case devices |
+| Charts may lose readability on mobile | Data-dense charts hard to read on <400px screens | Implement horizontal scrolling for charts; simplify data visualization |
 
 ## References
 
-- [Link to relevant documentation]
-- [Link to tutorials/articles used]
-- [Link to related files in the codebase]
+- [Figma Design System](https://www.figma.com/design/xgrs1dQC3LwKxozlFfmQ17/Emotion)

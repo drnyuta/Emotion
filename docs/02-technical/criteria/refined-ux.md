@@ -4,97 +4,94 @@
 
 ### Status
 
-**Status:** Accepted
-
-**Date:** 2026-01-04
+**Status:** Accepted  
+**Date:** 2026-01-05
 
 ### Context
 
-[Describe the problem or requirement this criterion addresses. What forces are at play? What constraints exist?]
+The Emotion Diary application targets young adults seeking emotional self-reflection and mental well-being support.  
+User research revealed several UX challenges common in existing journaling apps:
+
+- Poor onboarding and early paywalls reduce trust
+- Overly complex interfaces discourage daily use
+- Lack of guidance causes anxiety when facing a blank journal
+- Emotion tracking is often too simplistic or unclear
+- Accessibility and emotional comfort are frequently overlooked
+
+The system must balance emotional sensitivity, simplicity, and analytical depth while supporting both beginner and advanced users.  
+Constraints include limited MVP scope, mobile-first usage, and the need for WCAG 2.1 AA compliance.
 
 ### Decision
 
-[Describe the solution chosen. What approach did you take to satisfy this criterion?]
+A **refined, user-centered UX architecture** was chosen, based on:
+
+- Clear information architecture with shallow navigation depth
+- Guided journaling through prompts, emotion wheel, and AI assistance
+- Consistent layouts and naming across all screens
+- Calm, distraction-free visual design
+- Explicit empty states and system feedback
+- Accessibility-first design aligned with WCAG 2.1
+
+The UX is designed to feel supportive and predictable, reducing cognitive load while encouraging emotional honesty and habit formation.
 
 ### Alternatives Considered
 
 | Alternative | Pros | Cons | Why Not Chosen |
 |-------------|------|------|----------------|
-| [Option 1] | [Benefits] | [Drawbacks] | [Reason for rejection] |
-| [Option 2] | [Benefits] | [Drawbacks] | [Reason for rejection] |
-| [Option 3] | [Benefits] | [Drawbacks] | [Reason for rejection] |
+| Feature-heavy dashboard | Powerful, data-rich | Overwhelming, high cognitive load | Conflicts with simplicity and emotional safety |
+| Minimal text-only journaling | Very simple, fast | No guidance, low emotional literacy support | Not suitable for beginner users |
+| Gamification-first UX | High engagement potential | Can feel pressuring or judgmental | Emotional reflection should remain gentle |
 
 ### Consequences
 
 **Positive:**
-- [Benefit 1]
-- [Benefit 2]
-- [Benefit 3]
+- Lower barrier to entry for new users
+- Increased trust through transparency and predictability
+- Supports both guided and free-form journaling
+- Encourages long-term habit formation
+- Accessible and inclusive experience
 
 **Negative:**
-- [Drawback 1]
-- [Drawback 2]
+- More design and implementation effort
+- Requires careful consistency across features
+- Some advanced customization postponed beyond MVP
 
 **Neutral:**
-- [Observation that is neither positive nor negative]
+- UX prioritizes emotional comfort over maximum feature density
 
 ## Implementation Details
-
-### Project Structure
-
-```
-src/
-├── [folder]/           # [Description]
-│   ├── [file]          # [Description]
-│   └── [file]          # [Description]
-├── [folder]/           # [Description]
-└── ...
-```
 
 ### Key Implementation Decisions
 
 | Decision | Rationale |
-|----------|-----------|
-| [Decision 1] | [Why this approach] |
-| [Decision 2] | [Why this approach] |
-| [Decision 3] | [Why this approach] |
-
-### Code Examples
-
-[Optional: Include key code snippets that demonstrate the implementation]
-
-```[language]
-// [Description of what this code does]
-[code snippet]
-```
-
-### Diagrams
-
-[Link to relevant diagrams in assets/diagrams/ or include inline]
+|--------|-----------|
+| Sidebar-based navigation | Predictable, low cognitive load |
+| Guided empty states | Reduce anxiety and encourage action |
+| Emotion Wheel | Improves emotional literacy |
+| Tabs instead of deep routes | Faster mental mapping |
+| Autosave for journaling | Prevents emotional frustration |
 
 ## Requirements Checklist
 
-| # | Requirement | Status | Evidence/Notes |
-|---|-------------|--------|----------------|
-| 1 | [Requirement from criterion rubric] | ✅ | [Where/how implemented] |
-| 2 | [Requirement from criterion rubric] | ✅ | [Where/how implemented] |
-| 3 | [Requirement from criterion rubric] | ⚠️ | [Partial implementation details] |
-| 4 | [Requirement from criterion rubric] | ❌ | [Why not implemented] |
+| # | Requirement | Status | Evidence / Notes |
+|---|-------------|--------|------------------|
+| 1 | Clear navigation structure | ✅ | Sidebar navigation with logical sections and tabs |
+| 2 | Guided user flows | ✅ | Question of the Day, Emotion Wheel, AI Reports |
+| 3 | Accessibility (WCAG 2.1 AA) | ⚠️ | Accessibility checklist implemented (contrast, keyboard navigation, semantic HTML) |
+| 4 | Emotional comfort & clarity | ✅ | Calm color palette, consistent UI patterns, non-intrusive feedback |
+| 5 | Mobile-first usability | ⚠️ | Fully responsive layout, minor spacing and gesture refinements planned |
+| 6 | Personalization | ⚠️ | Limited in MVP (fixed emotions, default layouts) |
+| 7 | Clear error messages | ✅ | All errors are handled gracefully and displayed as clear, user-friendly messages|
 
 **Legend:**
-- ✅ Fully implemented
-- ⚠️ Partially implemented
+- ✅ Fully implemented  
+- ⚠️ Partially implemented  
 - ❌ Not implemented
 
 ## Known Limitations
 
 | Limitation | Impact | Potential Solution |
-|------------|--------|-------------------|
-| [Limitation 1] | [How it affects the system] | [How it could be fixed] |
-| [Limitation 2] | [How it affects the system] | [How it could be fixed] |
-
-## References
-
-- [Link to relevant documentation]
-- [Link to tutorials/articles used]
-- [Link to related files in the codebase]
+|-----------|--------|-------------------|
+| Limited personalization | Reduced sense of ownership and long-term engagement | Add user settings, preferences, and customizable UI |
+| No offline support | Users cannot journal without an internet connection | Implement local storage with background sync |
+| Fixed emotion set | Less emotional nuance for some users | Allow custom emotion tags or user-defined emotions |
