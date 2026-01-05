@@ -1,14 +1,12 @@
 # Criterion: Refined UX
 
-> Copy this template for each evaluation criterion. Rename the file to match the criterion (e.g., `backend.md`, `frontend.md`, `database.md`).
-
 ## Architecture Decision Record
 
 ### Status
 
-**Status:** Accepted | Proposed | Deprecated | Superseded
+**Status:** Accepted
 
-**Date:** [YYYY-MM-DD]
+**Date:** 2026-01-04
 
 ### Context
 

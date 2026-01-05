@@ -1,22 +1,26 @@
 # Criterion: Qualitative Testing
 
-> Copy this template for each evaluation criterion. Rename the file to match the criterion (e.g., `backend.md`, `frontend.md`, `database.md`).
-
 ## Architecture Decision Record
 
 ### Status
 
-**Status:** Accepted | Proposed | Deprecated | Superseded
+**Status:** Accepted
 
-**Date:** [YYYY-MM-DD]
+**Date:** 2026-01-04
 
 ### Context
 
-[Describe the problem or requirement this criterion addresses. What forces are at play? What constraints exist?]
+The "Emotion Diary" project aims to address the emotional wellness crisis among young adults aged 17–35. A qualitative validation process was required to ensure the tool effectively assists users in identifying emotions and overcoming "blank page paralysis". Significant market pain points, such as superficial AI feedback and poor user experiences, created a need for rigorous testing to verify that AI-generated insights provide genuine value and that the journaling interface remains intuitive for daily use.
 
 ### Decision
 
-[Describe the solution chosen. What approach did you take to satisfy this criterion?]
+A Moderated Remote User Testing approach was implemented in combination with In-depth Qualitative Interviews.
+
+The target audience consisted of students and early-career professionals representing the Gen Z demographic.
+
+The methodology required participants to perform specific tasks, such as logging an emotion and reviewing an AI-generated report, while following the "Think Aloud" protocol.
+
+Semi-structured post-session interviews were conducted to capture emotional responses to the interface and assess the perceived utility of AI insights.
 
 ### Alternatives Considered
 
