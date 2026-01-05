@@ -91,25 +91,26 @@ project/
 #### Backend Image
 
 **Base Image:** `node:20-slim`  
-**Final Size:** ~200-300 MB (production)  
+**Final Size:** ~1.5 GB (dev)  
 **Build Strategy:** Multi-stage build
 
 ```dockerfile
-# Stage 1: Builder
+# ---------- Build stage ----------
 FROM node:20-slim AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
+RUN npm install
+COPY src ./src
+COPY tsconfig.json ./
 RUN npm run build
 
-# Stage 2: Production
-FROM node:20-slim
-RUN useradd -m -s /bin/bash nodeuser
+# ---------- Production stage ----------
+FROM node:20-slim AS production
 WORKDIR /app
+RUN useradd -ms /bin/bash nodeuser
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
+COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production
 USER nodeuser
 EXPOSE 5000
 CMD ["node", "dist/server.js"]
@@ -124,20 +125,20 @@ CMD ["node", "dist/server.js"]
 #### Frontend Image
 
 **Base Image:** Build stage: `node:20-slim`, Runtime: `nginx:stable-alpine`  
-**Final Size:** ~30-50 MB (production)  
+**Final Size:** ~500 MB (dev)  
 **Build Strategy:** Multi-stage build
 
 ```dockerfile
-# Stage 1: Build React app
+# Build stage
 FROM node:20-slim AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 RUN npm run build
 
-# Stage 2: Serve with Nginx
-FROM nginx:stable-alpine
+# Production stage
+FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
@@ -150,115 +151,115 @@ CMD ["nginx", "-g", "daemon off;"]
 - Nginx optimized for caching and compression
 - Alpine Linux base (~5 MB) for minimal footprint
 
-#### PostgreSQL Image
-
-**Base Image:** `postgres:15`  
-**Final Size:** ~400 MB (official image)  
-**Initialization:** Automatic SQL script execution
-
-```yaml
-# docker-compose.yml
-services:
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${SUPERUSER_PASSWORD}
-      POSTGRES_DB: emotion_diary
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./postgres/init-scripts:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
-```
-
-**Optimizations:**
-- External volume for data persistence
-- Init scripts run automatically on first startup (alphabetical order)
-- No unnecessary PostgreSQL extensions installed
-
 ### Docker Compose Configuration
 
 **Base Configuration (`docker-compose.yml`):**
 ```yaml
-version: '3.8'
-
 services:
-  postgres:
-    image: postgres:15
+  db:
+    image: postgres:15-alpine
     container_name: postgres
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${SUPERUSER_PASSWORD}
-      POSTGRES_DB: emotion_diary
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./postgres/init-scripts:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
+      - ./db/migrations:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ${DATABASE_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - emotion-net
 
+volumes:
+  pgdata:
+
+networks:
+  emotion-net:
+```
+
+**Dev Configuration (`docker-compose.dev.yml`):**
+```yaml
+# docker-compose.dev.yml
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: emotion-backend-dev
+    ports:
+      - "5000:5000"
+    env_file: backend/.env
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/tsconfig.json:/app/tsconfig.json
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+    networks:
+      - emotion-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: emotion-frontend-dev
+    ports:
+      - "5173:5173" 
+    env_file: frontend/.env
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html 
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+    depends_on:
+      - backend
+    networks:
+      - emotion-net
+
+networks:
+  emotion-net:
+
+```
+
+**Prod Configuration (`docker-compose.prod.yml`):**
+```yaml
+# docker-compose.prod.yml
+services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: emotion-backend
-    environment:
-      PORT: ${PORT}
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_NAME: ${DATABASE_NAME}
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
-      JWT_SECRET: ${JWT_SECRET}
-      FRONTEND_URL: ${FRONTEND_URL}
-    depends_on:
-      postgres:
-        condition: service_healthy
+      target: production
+    container_name: emotion-backend-prod
     ports:
       - "5000:5000"
+    env_file: backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: emotion-frontend
-    environment:
-      VITE_API_URL: ${VITE_API_URL}
+    container_name: emotion-frontend-prod
     ports:
-      - "5173:80"
-    depends_on:
-      - backend
-
-volumes:
-  postgres_data:
-```
-
-**Development Override (`docker-compose.dev.yml`):**
-```yaml
-services:
-  backend:
-    build:
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./backend/src:/app/src
-      - ./backend/package.json:/app/package.json
-    command: npm run dev
-    
-  frontend:
-    build:
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
-    command: npm run dev
-    ports:
-      - "5173:5173"
+      - "80:80"
+    restart: unless-stopped
 ```
 
 ## Requirements Checklist
