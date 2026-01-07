@@ -18,4 +18,6 @@ router.put("/update/:id", DiaryController.updateEntry);
 // DELETE /diary/delete/:id
 router.delete("/delete/:id", DiaryController.deleteEntry);
 
+router.get("/entries/week", DiaryController.getEntriesByDateRange);
+
 export default router;

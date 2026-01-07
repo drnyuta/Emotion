@@ -46,6 +46,32 @@ export class DiaryController {
     }
   }
 
+  static async getEntriesByDateRange(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const startDate = req.query.startDate as string;
+      const endDate = req.query.endDate as string;
+
+      if (!startDate || !endDate) {
+        return res.status(400).json({
+          success: false,
+          error: "startDate and endDate are required",
+        });
+      }
+
+      const entries = await DiaryService.getEntriesByDateRange(
+        userId,
+        startDate,
+        endDate
+      );
+
+      res.json({ success: true, entries });
+    } catch (err: any) {
+      console.error("Error in getEntriesByDateRange:", err);
+      res.status(400).json({ success: false, error: err.message });
+    }
+  }
+
   static async createNew(req: AuthRequest, res: Response) {
     try {
       const userId = req.user!.id; 
