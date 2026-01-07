@@ -16,6 +16,35 @@ export const getDatesWithEntries = async (
   return res.rows;
 };
 
+export const getEntriesByDateRange = async (
+  userId: number,
+  startDate: string,
+  endDate: string
+) => {
+  const res = await client.query(
+    `SELECT 
+      de.id, 
+      de.entry_date::text as date, 
+      de.content as text,
+      json_agg(e.name) as emotions
+     FROM diary_entries de
+     LEFT JOIN entry_emotions ee ON ee.entry_id = de.id
+     LEFT JOIN emotions e ON e.id = ee.emotion_id
+     WHERE de.user_id = $1 
+       AND de.entry_date::date >= $2::date
+       AND de.entry_date::date <= $3::date
+     GROUP BY de.id, de.entry_date, de.content
+     ORDER BY de.entry_date ASC`,
+    [userId, startDate, endDate]
+  );
+  
+  return res.rows.map((row: any) => ({
+    date: row.date,
+    text: row.text,
+    emotions: row.emotions.filter((e: any) => e !== null) || []
+  }));
+};
+
 export const getEntryByDate = async (userId: number, entryDate: string) => {
   const entryRes = await client.query(
     `SELECT id, user_id, entry_date::text as entry_date, content, question_id, 

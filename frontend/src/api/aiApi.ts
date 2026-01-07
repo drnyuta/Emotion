@@ -17,10 +17,9 @@ interface ApiResponse<T = unknown> {
 
 export async function sendChatMessage(message: string): Promise<string> {
   try {
-    const response = await axiosInstance.post<ApiResponse<string | CrisisResponse>>(
-      "/ai/chat",
-      { message }
-    );
+    const response = await axiosInstance.post<
+      ApiResponse<string | CrisisResponse>
+    >("/ai/chat", { message });
 
     const data = response.data;
 
@@ -98,9 +97,7 @@ export async function generateDailyReport(
     );
 
     if (!response.data.success || !response.data.report) {
-      throw new Error(
-        response.data.error || "Failed to generate daily report"
-      );
+      throw new Error(response.data.error || "Failed to generate daily report");
     }
 
     return response.data.report;
@@ -115,17 +112,13 @@ export interface WeeklyEntry {
   emotions: string[];
 }
 
-export interface WeeklyReportParams {
-  entries: WeeklyEntry[];
-}
-
 export async function generateWeeklyReport(
-  params: WeeklyReportParams
+  entries: WeeklyEntry[]
 ): Promise<Report> {
   try {
     const response = await axiosInstance.post<ApiResponse<Report>>(
       "/ai/weekly-report",
-      params
+      { entries }
     );
 
     if (!response.data.success || !response.data.report) {
@@ -139,3 +132,10 @@ export async function generateWeeklyReport(
     handleAxiosError(error, "Failed to generate weekly report");
   }
 }
+
+export const getWeeklyEntries = async (startDate: string, endDate: string) => {
+  const response = await axiosInstance.get(`/diary/entries/week`, {
+    params: { startDate, endDate },
+  });
+  return response.data.entries;
+};

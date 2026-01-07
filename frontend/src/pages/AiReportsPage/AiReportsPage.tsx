@@ -16,6 +16,7 @@ import "./AiReportsPage.scss";
 import { RingLoader } from "react-spinners";
 import Emoji from "../../assets/icons/sad-face.svg";
 import { Button } from "../../components/Button/Button";
+import { WeeklyReportModal } from "../../components/WeeklyReportModal/WeeklyReportModal";
 
 const currentYear = new Date().getFullYear();
 
@@ -34,6 +35,7 @@ export const AiReportsPage = () => {
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchReports();
@@ -72,7 +74,7 @@ export const AiReportsPage = () => {
     navigate(`/reports/${reportId}`);
   };
 
- const handleDelete = (reportId: number) => {
+  const handleDelete = (reportId: number) => {
     Modal.confirm({
       title: "Delete report",
       content: "Are you sure you want to delete this report?",
@@ -97,6 +99,14 @@ export const AiReportsPage = () => {
   return (
     <div className="reports-page">
       <h1>AI Reports</h1>
+      <div>
+        <Button
+          variant="primary"
+          text="Generate Weekly Report"
+          onClick={() => setIsModalOpen(true)}
+          fullWidth={false}
+        />
+      </div>
       <div className="reports-page__filters">
         <div className="reports-page__filters-item">
           <h3>Period:</h3>
@@ -106,7 +116,7 @@ export const AiReportsPage = () => {
             onChange={setPeriod}
           />
         </div>
-         <div className="reports-page__filters-item">
+        <div className="reports-page__filters-item">
           <h3>Sort:</h3>
           <Select
             value={sortBy}
@@ -169,6 +179,11 @@ export const AiReportsPage = () => {
           </div>
         )}
       </div>
+      <WeeklyReportModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => fetchReports()}
+      />
     </div>
   );
 };
