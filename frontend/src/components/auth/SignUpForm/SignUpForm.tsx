@@ -116,7 +116,7 @@ export const SignUpForm = () => {
           <Button
             variant="blue"
             size="large"
-            text="Log In"
+            text="Create account"
             type="submit"
             disabled={isSubmitting}
           />
